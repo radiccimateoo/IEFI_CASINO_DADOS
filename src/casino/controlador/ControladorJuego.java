@@ -1,5 +1,4 @@
 package casino.controlador;
-
 import casino.modelo.*;
 import casino.vista.VentanaConfiguracion;
 import javax.swing.*;
@@ -46,28 +45,39 @@ public class ControladorJuego {
         });
 
         ventanaConfig.getBtnEliminarJugador().addActionListener(e -> {
+            String apodo = "";
             JList<String> lista = ventanaConfig.getLstJUgadoresRegistrados();
             int indiceSeleccionado = lista.getSelectedIndex();
 
             if (indiceSeleccionado != -1) {
                 String elemento = lista.getModel().getElementAt(indiceSeleccionado);
-                String apodo = elemento.substring(elemento.indexOf('(') + 1, elemento.indexOf(')'));
-                casino.eliminarJugador(apodo, ventanaConfig);
-                actualizarListaJugadores();
-
+                apodo = elemento.substring(elemento.indexOf('(') + 1, elemento.indexOf(')'));
             } else {
-                String apodo = ventanaConfig.getTxtApodo().getText().trim();
-                if (apodo.isEmpty()) {
-                    JOptionPane.showMessageDialog(ventanaConfig, 
-                        "Debe ingresar el apodo o seleccionar un jugador de la lista haciendo click sobre él.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                casino.eliminarJugador(apodo, ventanaConfig);
-                actualizarListaJugadores();
+                apodo = ventanaConfig.getTxtApodo().getText().trim();
+            }
+
+            if (apodo.isEmpty()) {
+                JOptionPane.showMessageDialog(ventanaConfig, 
+                    "Debe ingresar el apodo o seleccionar un jugador de la lista haciendo click sobre él.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            boolean fueEliminado = casino.eliminarJugador(apodo); 
+
+            if (fueEliminado) {
+                JOptionPane.showMessageDialog(ventanaConfig, 
+                    "Jugador con apodo '" + apodo + "' ha sido eliminado.",
+                    "Información", JOptionPane.INFORMATION_MESSAGE);
+                actualizarListaJugadores(); 
+            } else {
+                JOptionPane.showMessageDialog(ventanaConfig, 
+                    "No se encontró ningún jugador con el apodo: " + apodo,
+                    "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
+        
+        
         ventanaConfig.getBtnConfirmarPart().addActionListener(e -> {
             String dineroStr = ventanaConfig.getTxtDineroInicial().getText().trim();
             String cantPartStr = ventanaConfig.getTxtCantPartidas().getText().trim();

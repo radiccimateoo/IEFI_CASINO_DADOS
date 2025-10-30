@@ -3,7 +3,6 @@ package casino.modelo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.JOptionPane;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -99,7 +98,7 @@ public class Casino {
     return conteoDadosCargados;
     }
     
-    public void eliminarJugador(String apodo, javax.swing.JFrame ventana) {
+    public boolean eliminarJugador(String apodo) {
         Jugador aEliminar = null;
         for (Jugador j : jugadores) {
             if (j.getApodo().equalsIgnoreCase(apodo)) {
@@ -107,18 +106,15 @@ public class Casino {
                 break;
             }
         }
+
         if (aEliminar != null) {
             jugadores.remove(aEliminar);
-            JOptionPane.showMessageDialog(ventana, 
-                "Jugador eliminado: " + aEliminar.getNombreConTipo(),
-                "Información", JOptionPane.INFORMATION_MESSAGE);
+            return true; // Éxito
         } else {
-            JOptionPane.showMessageDialog(ventana, 
-                "No se encontró jugador con apodo: " + apodo,
-                "Error", JOptionPane.ERROR_MESSAGE);
+            return false; // Fracaso (no se encontró)
         }
     }
-
+    
 /* Guarda el historial de partidas en un archivo de texto llamado "historial_partidas.txt".
      * Este archivo será leído por la clase Reporte para mostrar el historial.
      * El archivo se sobreescribe en cada nueva ejecución del juego.
