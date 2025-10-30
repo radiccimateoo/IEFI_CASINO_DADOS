@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package casino.modelo;
 
-/**
- *
- * @author Alumno
- */
 public abstract class Jugador {
     private String nombre;
     private String apodo;
@@ -38,6 +30,14 @@ public abstract class Jugador {
 
     public void sumarVictoria() { partidasGanadas++; }
 
+/**
+     * Reinicia el contador de partidas ganadas a cero.
+     * Útil para cuando se inicia una nueva serie de partidas desde la interfaz.
+*/    
+    public void resetearVictorias() {
+        this.partidasGanadas = 0;
+    }
+    
     public void ganar(int cantidad) {
         if (cantidad > 0) {
             dinero += cantidad;

@@ -1,40 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package casino.controlador;
 
 import casino.modelo.*;
 import casino.vista.VentanaConfiguracion;
-
 import javax.swing.*;
 import java.util.List;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author usuario
- */
 public class ControladorJuego {
-
     private Casino casino;
-    private VentanaConfiguracion ventanaConfig;
-    
+    private VentanaConfiguracion ventanaConfig;  
     private boolean partidaConfirmada = false;
-
 
     public ControladorJuego(Casino casino, VentanaConfiguracion ventanaConfig) {
         this.casino = casino;
         this.ventanaConfig = ventanaConfig;
-
-        // Configurar eventos de botones de la vista
         configurarEventos();
     }
 
     private void configurarEventos() {
-        // Botón agregar jugador
         ventanaConfig.getBtnAgregarJugador().addActionListener(e -> {
             String nombre = ventanaConfig.getTxtNombreJugador().getText().trim();
             String apodo = ventanaConfig.getTxtApodo().getText().trim();
@@ -50,36 +34,28 @@ public class ControladorJuego {
             Jugador jugador = casino.crearJugador(nombre, apodo, tipo);
             casino.agregarJugador(jugador);
 
-            // Agregar jugador Casino automáticamente (si no está ya)
             boolean existeCasino = casino.getJugadores().stream().anyMatch(j -> j instanceof JugadorCasino);
             if (!existeCasino) {
                 int dineroInicial = 500; // valor por defecto o el que tengas configurado
                 JugadorCasino jugadorCasino = new JugadorCasino("Casino", dineroInicial);
                 casino.agregarJugador(jugadorCasino);
                 System.out.println("Se agregó automáticamente el jugador 'Casino' (La Casa).");
-            }
-            
-            
+            }        
             actualizarListaJugadores();
             limpiarCamposJugador();
         });
 
-        // Botón eliminar jugador
         ventanaConfig.getBtnEliminarJugador().addActionListener(e -> {
             JList<String> lista = ventanaConfig.getLstJUgadoresRegistrados();
             int indiceSeleccionado = lista.getSelectedIndex();
 
             if (indiceSeleccionado != -1) {
-                // Se seleccionó un jugador de la lista
                 String elemento = lista.getModel().getElementAt(indiceSeleccionado);
-                // Suponemos que el formato es "Nombre (Apodo) - Tipo"
                 String apodo = elemento.substring(elemento.indexOf('(') + 1, elemento.indexOf(')'));
-
                 casino.eliminarJugador(apodo, ventanaConfig);
                 actualizarListaJugadores();
 
             } else {
-                // No se seleccionó, pedimos el apodo manualmente
                 String apodo = ventanaConfig.getTxtApodo().getText().trim();
                 if (apodo.isEmpty()) {
                     JOptionPane.showMessageDialog(ventanaConfig, 
@@ -92,13 +68,10 @@ public class ControladorJuego {
             }
         });
 
-
-        //btn confirmar registro de partidas
         ventanaConfig.getBtnConfirmarPart().addActionListener(e -> {
             String dineroStr = ventanaConfig.getTxtDineroInicial().getText().trim();
             String cantPartStr = ventanaConfig.getTxtCantPartidas().getText().trim();
 
-            // Cantidad de partidas sigue siendo obligatoria
             if (cantPartStr.isEmpty()) {
                 JOptionPane.showMessageDialog(ventanaConfig,
                     "No se puede confirmar la partida.\nFalta ingresar la cantidad de partidas.",
@@ -125,13 +98,10 @@ public class ControladorJuego {
                     partidaConfirmada = false;
                     return;
                 }
-
-                // Todo OK, configuración confirmada
                 partidaConfirmada = true;
                 JOptionPane.showMessageDialog(ventanaConfig,
                     "Configuración de la partida confirmada correctamente.",
                     "Información", JOptionPane.INFORMATION_MESSAGE);
-
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(ventanaConfig,
                     "Cantidad de partidas inválida.",
@@ -140,7 +110,7 @@ public class ControladorJuego {
             }
         });
 
-        // btn Jugar
+        
         ventanaConfig.getBtnJugar().addActionListener(e -> {
             // 1. Verificar cantidad de jugadores
             int cantJugadores = casino.getJugadores().size();
@@ -150,7 +120,6 @@ public class ControladorJuego {
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
             // 2. Verificar si la partida fue confirmada
             if (!partidaConfirmada) {
                 JOptionPane.showMessageDialog(ventanaConfig,
@@ -158,27 +127,23 @@ public class ControladorJuego {
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
             // 3. Leer valores confirmados
             int cantPartidas = Integer.parseInt(ventanaConfig.getTxtCantPartidas().getText().trim());
             int dineroInicial = Integer.parseInt(ventanaConfig.getTxtDineroInicial().getText().trim());
-
             // 4. Inicializar dinero de cada jugador
             for (Jugador j : casino.getJugadores()) {
                 j.setDinero(dineroInicial);
             }
-            
+           
             // 5. Comprobar si la trampa está activada
             boolean trampaActiva = ventanaConfig.getChkTrampa().isSelected();
             JugadorCasino jugadorCasino = null;
-
             for (Jugador j : casino.getJugadores()) {
                 if (j instanceof JugadorCasino) {
                     jugadorCasino = (JugadorCasino) j;
                     break;
                 }
             }
-
             if (jugadorCasino != null && trampaActiva) {
                 JOptionPane.showMessageDialog(ventanaConfig,
                     "La trampa del Casino está activada.\nEl Casino tiene un 40% de probabilidad de sacar 6 en cada dado.",
@@ -188,7 +153,11 @@ public class ControladorJuego {
                 System.out.println(" La trampa del Casino está DESACTIVADA. <<<");
             }
 
-            // 6. Iniciar juego
+            // 6. Reiniciar Estadisticas
+            casino.reiniciarEstadisticas();
+
+            
+            // 7. Iniciar juego
             List<String> historial = casino.jugar(cantPartidas);
             casino.guardarHistorial(historial);
             Reporte.generarReporteFinal(casino, cantPartidas);

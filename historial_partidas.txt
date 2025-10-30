@@ -1,1 +1,3 @@
-hola este es el historial.
+PARTIDA #1 - Jugadores: Lucas, Casino, Marcos, Elmer | Ganador: Lucas (VIP) | Rondas ganadas: 1 de 3
+PARTIDA #2 - Jugadores: Lucas, Casino, Marcos, Elmer | Ganador: Lucas (VIP) | Rondas ganadas: 2 de 3
+PARTIDA #3 - Jugadores: Lucas, Casino, Marcos, Elmer | Ganador: Casino (El Casino) | Rondas ganadas: 2 de 3
