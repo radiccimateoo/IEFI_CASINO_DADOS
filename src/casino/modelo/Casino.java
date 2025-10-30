@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Casino {
     
     private ArrayList<Jugador> jugadores;
-    // CONSIGNA 4: Se añade atributos globales para el reporte
     private int mayorApuesta = 0;
     private String nombreJugadorMayorApuesta = "Sin registro";
     private int mejorPuntajeDados = 0;
@@ -17,12 +19,10 @@ public class Casino {
     private HashMap<String, Integer> victimasDeTrampas = new HashMap<>();
     public int cantPartidasTotal = 0;
     
-    //--------------------------------------------------------
     public Casino() {
         jugadores = new ArrayList<>();
     }
     
-    // CONSIGNA 4: Se añade getters para el reporte
     public ArrayList<Jugador> getJugadores() { return jugadores; }
     public int getMayorApuesta() { return mayorApuesta; }
     public String getNombreJugadorMayorApuesta() { return nombreJugadorMayorApuesta; }
@@ -30,8 +30,26 @@ public class Casino {
     public String getNombreJugadorMejorPuntaje() { return nombreJugadorMejorPuntaje; }
     public HashMap<String, Integer> getVictimasDeTrampas() { return victimasDeTrampas; }
 
-    // -------------------------------------------------------------------------------
-    // CONSIGNA 4: Metodo para actualizar estadisticas
+     /**
+     * Reinicia todas las estadísticas a sus valores iniciales.
+     * Es crucial llamar a este método antes de iniciar una nueva serie de partidas
+     * para evitar que los datos de la sesión anterior se acumulen.
+     */
+     public void reiniciarEstadisticas() {
+        this.mayorApuesta = 0;
+        this.nombreJugadorMayorApuesta = "Sin registro";
+        this.mejorPuntajeDados = 0;
+        this.nombreJugadorMejorPuntaje = "Sin registro";
+        this.conteoDadosCargados = 0;
+        this.victimasDeTrampas.clear(); // Limpia el mapa de víctimas
+        this.cantPartidasTotal = 0;
+        
+        // También reiniciamos las victorias de cada jugador
+        for (Jugador j : jugadores) {
+            j.resetearVictorias(); 
+        }
+    }
+    
     public void actualizarEstadisticas(int apuesta, int puntajeDados, Jugador jugador) {
         if (apuesta > this.mayorApuesta) {
             this.mayorApuesta = apuesta;
@@ -42,14 +60,11 @@ public class Casino {
             this.nombreJugadorMejorPuntaje = jugador.getNombreConTipo();
         }
     }   
-    // CONSIGNA 4: Metodo para registrar trampeados
     public void registrarVictima(Jugador victima) {
     String nombreVictima = victima.getNombre();
-    // getOrDefault busca el contador actual o devuelve 0 si es la primera vez
     int conteoActual = victimasDeTrampas.getOrDefault(nombreVictima, 0);
     victimasDeTrampas.put(nombreVictima, conteoActual + 1);
 }
-    // -------------------------------------------------------------------------------  
     public Jugador crearJugador(String nombre, String apodo, int tipo) {
         int dineroInicial = 500; // Todos empiezan con $500
         switch (tipo) {
@@ -104,18 +119,25 @@ public class Casino {
         }
     }
 
-    
+/* Guarda el historial de partidas en un archivo de texto llamado "historial_partidas.txt".
+     * Este archivo será leído por la clase Reporte para mostrar el historial.
+     * El archivo se sobreescribe en cada nueva ejecución del juego.
+     * @param historial La lista de strings que contiene el detalle de cada partida.     
+*/  
     public void guardarHistorial(List<String> historial) {
-        // Guardar en archivo, base de datos o imprimir en consola
-        historial.forEach(System.out::println);
+        String nombreArchivo = "historial_partidas.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo, false))) { // false para sobreescribir
+            for (String linea : historial) {
+                writer.write(linea);
+                writer.newLine(); 
+            }
+            System.out.println("Historial guardado correctamente en " + nombreArchivo);
+        } catch (IOException e) {
+            System.err.println("Error al guardar el historial en el archivo: " + e.getMessage());
+        }
     }
-
     
-    /* por x cantidad de partidas siempre se juegan 3 rondas
-       ahora devuelve una lista tipo string del detalle de cada ganador
-       ademas de mostrarlo por consola, para este metodo ser tratado en la clase
-       main, para guardar la partida completa
-    */
+    
     public List<String> jugar(int cantPartidas) {
         List<String> detalles = new ArrayList<>();
 
