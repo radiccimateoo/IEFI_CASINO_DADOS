@@ -3,8 +3,8 @@ import casino.modelo.*;
 import casino.vista.VentanaConfiguracion;
 import javax.swing.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+
 
 public class ControladorJuego {
     private Casino casino;
@@ -80,15 +80,7 @@ public class ControladorJuego {
         
         ventanaConfig.getBtnConfirmarPart().addActionListener(e -> {
             String dineroStr = ventanaConfig.getTxtDineroInicial().getText().trim();
-            String cantPartStr = ventanaConfig.getTxtCantPartidas().getText().trim();
-
-            if (cantPartStr.isEmpty()) {
-                JOptionPane.showMessageDialog(ventanaConfig,
-                    "No se puede confirmar la partida.\nFalta ingresar la cantidad de partidas.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                partidaConfirmada = false;
-                return;
-            }
+            String rondasStr = ventanaConfig.getTxtRondasPartidas().getText().trim();
 
             try {
                 int dinero;
@@ -98,12 +90,16 @@ public class ControladorJuego {
                 } else {
                     dinero = Integer.parseInt(dineroStr);
                 }
-
-                int cantPartidas = Integer.parseInt(cantPartStr);
-
-                if (dinero <= 0 || cantPartidas <= 0) {
+                int cantRondas;
+                if (rondasStr.isEmpty()) {
+                    cantRondas = 3; // Valor por defecto si el campo está vacío
+                    ventanaConfig.getTxtRondasPartidas().setText("3");
+                } else {
+                    cantRondas = Integer.parseInt(rondasStr);
+                }
+                if (dinero <= 0 || cantRondas <= 0) {
                     JOptionPane.showMessageDialog(ventanaConfig,
-                        "Dinero inicial y cantidad de partidas deben ser mayores a cero.",
+                        "Dinero inicial y cantidad de rondas deben ser mayores a cero.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                     partidaConfirmada = false;
                     return;
@@ -124,6 +120,8 @@ public class ControladorJuego {
         ventanaConfig.getBtnJugar().addActionListener(e -> {
             // 1. Verificar cantidad de jugadores
             int cantJugadores = casino.getJugadores().size();
+            boolean partidaCargada = false;
+                    
             if (cantJugadores < 2 || cantJugadores > 4) {
                 JOptionPane.showMessageDialog(ventanaConfig, 
                     "No se puede iniciar la partida.\nDebe haber entre 2 y 4 jugadores registrados.\nJugadores actuales: " + cantJugadores,
@@ -138,11 +136,17 @@ public class ControladorJuego {
                 return;
             }
             // 3. Leer valores confirmados
-            int cantPartidas = Integer.parseInt(ventanaConfig.getTxtCantPartidas().getText().trim());
+            int cantPartidas = getCantidadPartidasSeleccionada();
             int dineroInicial = Integer.parseInt(ventanaConfig.getTxtDineroInicial().getText().trim());
+            int cantRondas = Integer.parseInt(ventanaConfig.getTxtRondasPartidas().getText().trim());
+            
+
             // 4. Inicializar dinero de cada jugador
-            for (Jugador j : casino.getJugadores()) {
-                j.setDinero(dineroInicial);
+            if (!partidaCargada) {
+                // 4. Inicializar dinero de cada jugador (solo si es una partida nueva)
+                for (Jugador j : casino.getJugadores()) {
+                    j.setDinero(dineroInicial);
+                }
             }
            
             // 5. Comprobar si la trampa está activada
@@ -168,16 +172,50 @@ public class ControladorJuego {
 
             
             // 7. Iniciar juego
-            List<String> historial = casino.jugar(cantPartidas);
+            List<String> historial = casino.jugar(cantPartidas, cantRondas);
             casino.guardarHistorial(historial);
+            casino.guardarPartida(); 
+
             Reporte.generarReporteFinal(casino, cantPartidas);
 
             JOptionPane.showMessageDialog(ventanaConfig, "Juego finalizado. Revisa el reporte final.");
         });
-
-
+      
+    ventanaConfig.getBtnCargarPartida().addActionListener(e -> {
+        // 1. Pedimos al modelo que cargue los datos.
+        String mensaje = casino.cargarPartida();
+        
+        // 2. Mostramos el resultado al usuario.
+        JOptionPane.showMessageDialog(ventanaConfig, mensaje);
+        
+        // 3. Actualizamos la lista de jugadores en la vista para reflejar los cambios.
+        actualizarListaJugadores();
+        
+        // Opcional: Deshabilitar la configuración de nuevos jugadores si se cargó una partida
+        // para evitar inconsistencias.
+        ventanaConfig.getTxtNombreJugador().setEnabled(false);
+        ventanaConfig.getTxtApodo().setEnabled(false);
+        ventanaConfig.getCmbTipoJugador().setEnabled(false);
+        ventanaConfig.getBtnAgregarJugador().setEnabled(false);
+        ventanaConfig.getBtnEliminarJugador().setEnabled(false);
+    });        
+        
+        
         // Botón salir
         ventanaConfig.getBtnSalir().addActionListener(e -> System.exit(0));
+    }
+    
+    private int getCantidadPartidasSeleccionada() {
+        // Asumimos que Op2 corresponde a 3 partidas.
+        if (ventanaConfig.getOp2().isSelected()) {
+            return 3;
+        }
+        // Asumimos que Op3 corresponde a 5 partidas.
+        if (ventanaConfig.getOp3().isSelected()) {
+            return 5;
+        }
+        // Por defecto, o si Op1 está seleccionado, devuelve 2.
+        return 2; 
     }
 
     // Actualiza la lista de jugadores en la vista
@@ -201,4 +239,5 @@ public class ControladorJuego {
         if (apodo.length() < 3 || apodo.length() > 10) return false;
         return apodo.matches("[a-zA-Z ]+");
     }
+    
 }

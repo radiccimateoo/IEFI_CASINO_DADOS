@@ -1,0 +1,5 @@
+nombre,apodo,tipo,dinero
+Lucas,Luc,VIP,8344
+Casino,La Casa,El Casino,12060
+Marcos,Marc,Experto,3196
+Emilia,Emi,Novato,7600
