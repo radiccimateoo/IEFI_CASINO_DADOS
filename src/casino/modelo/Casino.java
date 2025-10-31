@@ -6,6 +6,10 @@ import java.util.List;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 public class Casino {
     
@@ -17,6 +21,8 @@ public class Casino {
     private int conteoDadosCargados = 0;
     private HashMap<String, Integer> victimasDeTrampas = new HashMap<>();
     public int cantPartidasTotal = 0;
+    private static final String ARCHIVO_GUARDADO = "partida_guardada.txt";
+
     
     public Casino() {
         jugadores = new ArrayList<>();
@@ -48,7 +54,77 @@ public class Casino {
             j.resetearVictorias(); 
         }
     }
-    
+     
+    public void guardarPartida() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_GUARDADO))) {
+            // Escribimos una cabecera para que el archivo sea más legible
+            writer.write("nombre,apodo,tipo,dinero");
+            writer.newLine();
+            
+            for (Jugador j : this.jugadores) {
+                String linea = String.join(",",
+                        j.getNombre(),
+                        j.getApodo(),
+                        j.obtenerTipoJugador(),
+                        String.valueOf(j.getDinero())
+                );
+                writer.write(linea);
+                writer.newLine();
+            }
+            System.out.println("Partida guardada correctamente en " + ARCHIVO_GUARDADO);
+        } catch (IOException e) {
+            System.err.println("Error al guardar la partida: " + e.getMessage());
+        }
+    }   
+ 
+    public String cargarPartida() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_GUARDADO))) {
+            // Limpiamos la lista de jugadores actual antes de cargar la nueva.
+            this.jugadores.clear();
+            
+            String linea;
+            reader.readLine(); // Saltamos la línea de la cabecera (nombre,apodo,tipo,dinero)
+
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos.length == 4) {
+                    String nombre = datos[0];
+                    String apodo = datos[1];
+                    String tipo = datos[2];
+                    int dinero = Integer.parseInt(datos[3]);
+
+                    Jugador jugadorCargado = null;
+                    // Re-creamos el jugador basado en su tipo
+                    switch (tipo) {
+                        case "Novato":
+                            jugadorCargado = new JugadorNovato(nombre, apodo, 0);
+                            break;
+                        case "Experto":
+                            jugadorCargado = new JugadorExperto(nombre, apodo, 0);
+                            break;
+                        case "VIP":
+                            jugadorCargado = new JugadorVIP(nombre, apodo, 0);
+                            break;
+                        case "El Casino":
+                            jugadorCargado = new JugadorCasino(nombre, 0);
+                            break;
+                    }
+                    
+                    if (jugadorCargado != null) {
+                        jugadorCargado.setDinero(dinero); // Establecemos el dinero guardado
+                        this.jugadores.add(jugadorCargado);
+                    }
+                }
+            }
+            return "Partida cargada exitosamente.";
+
+        } catch (FileNotFoundException e) {
+            return "Error: No se encontró el archivo de partida guardada.";
+        } catch (IOException | NumberFormatException e) {
+            return "Error al leer el archivo de partida: " + e.getMessage();
+        }
+    }    
+     
     public void actualizarEstadisticas(int apuesta, int puntajeDados, Jugador jugador) {
         if (apuesta > this.mayorApuesta) {
             this.mayorApuesta = apuesta;
@@ -134,7 +210,7 @@ public class Casino {
     }
     
     
-    public List<String> jugar(int cantPartidas) {
+    public List<String> jugar(int cantPartidas, int cantRondas) {
         List<String> detalles = new ArrayList<>();
 
         for (int i = 1; i <= cantPartidas; i++) {
@@ -148,16 +224,17 @@ public class Casino {
 
             // 3 rondas fijas
             JuegoDados juego = new JuegoDados(jugadores, this); 
-            // CONSIGNA 4: a la clase JuegoDados, se le pasa por parametro el metodo del casino
-            for (int r = 1; r <= 3; r++) {
-                if (!juego.isJuegoTerminado()) {
+
+
+            for (int r = 1; r <= cantRondas; r++) {
+              if (!juego.isJuegoTerminado()) {
                     System.out.println("\n---- Ronda " + r);
                     List<Jugador> ganadoresRonda = juego.jugarRonda();
                     
                     if (ganadoresRonda == null) {
                         System.out.println("️ Juego finalizado anticipadamente en la ronda " + r + " de la partida " + i);
                         cantPartidasTotal = i;
-                        return detalles; // corta el método y devuelve lo jugado hasta acá
+                        return detalles;
                     }
                     for (Jugador g : ganadoresRonda) {
                         rondasGanadas.put(g, rondasGanadas.get(g) + 1);
@@ -187,7 +264,7 @@ public class Casino {
                 if (j < jugadores.size() - 1) detalle.append(", ");
             }
             detalle.append(" | Ganador: ").append(ganadorPartida.getNombreConTipo());
-            detalle.append(" | Rondas ganadas: ").append(maxRondas).append(" de 3");
+            detalle.append(" | Rondas ganadas: ").append(maxRondas).append(" de ").append(cantRondas);
 
             detalles.add(detalle.toString());
             
@@ -196,8 +273,9 @@ public class Casino {
 
         return detalles;
     }
+   
     
     public int getCantPartidas() { return this.cantPartidasTotal; }
-
+    
     
 }

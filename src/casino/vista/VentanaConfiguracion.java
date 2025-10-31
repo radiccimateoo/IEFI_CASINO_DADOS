@@ -15,7 +15,6 @@ import javax.swing.JTextField;
  * @author usuario
  */
 public class VentanaConfiguracion extends javax.swing.JFrame {
-    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaConfiguracion.class.getName());
 
     /**
@@ -39,8 +38,8 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
     public JButton getBtnConfirmarPart() { return bntConfirmarPart; }
 
 
-    public JTextField getTxtDineroInicial() { return txtDineroInicial; }
-    public JTextField getTxtCantPartidas() { return txtCantPartJugar; }
+    public JTextField getTxtDineroInicial() { return txtDineroInicial; }  
+    
     public JCheckBox getChkTrampa() { return chkActDescTrampa; }
 
 
@@ -53,6 +52,7 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgpCantidadPartidas = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         btnCargarPartida = new javax.swing.JButton();
@@ -77,8 +77,11 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         chkActDescTrampa = new javax.swing.JCheckBox();
         txtDineroInicial = new javax.swing.JTextField();
-        txtCantPartJugar = new javax.swing.JTextField();
         bntConfirmarPart = new javax.swing.JButton();
+        Op1 = new javax.swing.JRadioButton();
+        Op2 = new javax.swing.JRadioButton();
+        Op3 = new javax.swing.JRadioButton();
+        txtRondasPartidas = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -188,17 +191,51 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
         jLabel5.setText("Cantidad de partidas a jugar");
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 215, -1));
 
-        jLabel6.setText("Rondas por partida : 3");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 170, 179, -1));
+        jLabel6.setText("Rondas por Partida");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 180, 179, -1));
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 213, -1, -1));
 
         chkActDescTrampa.setText("Activar/desactivar trampa");
-        jPanel2.add(chkActDescTrampa, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 200, 173, -1));
-        jPanel2.add(txtDineroInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 193, -1));
-        jPanel2.add(txtCantPartJugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 130, 193, -1));
+        jPanel2.add(chkActDescTrampa, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 240, 173, -1));
+        jPanel2.add(txtDineroInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 240, -1));
 
         bntConfirmarPart.setText("Listo!");
-        jPanel2.add(bntConfirmarPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 250, 200, -1));
+        jPanel2.add(bntConfirmarPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 280, 240, -1));
+
+        bgpCantidadPartidas.add(Op1);
+        Op1.setSelected(true);
+        Op1.setText("2 Partidas");
+        Op1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Op1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(Op1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 140, -1, -1));
+
+        bgpCantidadPartidas.add(Op2);
+        Op2.setText("3 Partidas");
+        Op2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Op2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(Op2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, -1, -1));
+
+        bgpCantidadPartidas.add(Op3);
+        Op3.setText("5 Partidas");
+        Op3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Op3ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(Op3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 140, -1, -1));
+
+        txtRondasPartidas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRondasPartidasActionPerformed(evt);
+            }
+        });
+        jPanel2.add(txtRondasPartidas, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 200, 240, -1));
 
         jTabbedPane1.addTab("Configuracion de partidas", jPanel2);
 
@@ -216,28 +253,41 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Op1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Op1ActionPerformed
+
+    }//GEN-LAST:event_Op1ActionPerformed
+
+    private void Op2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Op2ActionPerformed
+    }//GEN-LAST:event_Op2ActionPerformed
+
+    private void Op3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Op3ActionPerformed
+    }//GEN-LAST:event_Op3ActionPerformed
+
+    private void txtRondasPartidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRondasPartidasActionPerformed
+    }//GEN-LAST:event_txtRondasPartidasActionPerformed
+    
+    public javax.swing.ButtonGroup getBgpCantidadPartidas() {
+        return bgpCantidadPartidas;
+    }
+    public javax.swing.JTextField getTxtRondasPartidas() {
+        return txtRondasPartidas;
+    }
+    public javax.swing.JRadioButton getOp1() {
+        return Op1;
+    }
+
+    public javax.swing.JRadioButton getOp2() {
+        return Op2;
+    }
+
+    public javax.swing.JRadioButton getOp3() {
+        return Op3;
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new VentanaConfiguracion().setVisible(true));
     }
     
@@ -245,6 +295,10 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Jugadores;
+    private javax.swing.JRadioButton Op1;
+    private javax.swing.JRadioButton Op2;
+    private javax.swing.JRadioButton Op3;
+    private javax.swing.ButtonGroup bgpCantidadPartidas;
     private javax.swing.JButton bntConfirmarPart;
     private javax.swing.JButton btnAgregarJugador;
     private javax.swing.JButton btnCargarPartida;
@@ -267,9 +321,9 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList<String> lstJUgadoresRegistrados;
     private javax.swing.JTextField txtApodo;
-    private javax.swing.JTextField txtCantPartJugar;
     private javax.swing.JTextField txtDineroInicial;
     private javax.swing.JTextField txtNombreJugador;
+    private javax.swing.JTextField txtRondasPartidas;
     // End of variables declaration//GEN-END:variables
 
 }
