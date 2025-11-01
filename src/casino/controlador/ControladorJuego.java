@@ -180,33 +180,23 @@ public class ControladorJuego {
                 
         /* ============= CARGAR PARTIDA  =============*/
         ventanaConfig.getBtnCargarPartida().addActionListener(e -> {
-            try {
-                // 1. Pedimos al modelo que cargue los datos. El método devuelve un DTO.
-                PartidaGuardadaDTO partidaGuardada = casino.cargarPartida();
-                
-                // Si la carga fue exitosa, el DTO no será null (el método lanzaría excepción si falla).
-                // Mostramos un mensaje de éxito al usuario.
-                JOptionPane.showMessageDialog(ventanaConfig, "Partida cargada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-                
-                // 2. Ocultamos la ventana de configuración.
-                ventanaConfig.setVisible(false);
+           try {
+                casino.modelo.PartidaGuardadaDTO partidaGuardada = casino.cargarPartida();
 
-                // 3. Creamos la nueva ventana de juego.
+                JOptionPane.showMessageDialog(ventanaConfig, "Partida cargada exitosamente.");
+
+                ventanaConfig.setVisible(false);
                 VentanaJuego ventanaJuego = new VentanaJuego();
-                
-                // 4. Creamos el controlador para la ventana de juego, pasándole las 3 referencias.
                 ControladorVentanaJuego controladorVentanaJuego = new ControladorVentanaJuego(casino, ventanaJuego, ventanaConfig);
-                
-                // 5. Iniciamos el juego con los datos que venían en el DTO (partidas y rondas).
-                controladorVentanaJuego.iniciarJuego(partidaGuardada.getTotalPartidas(), partidaGuardada.getTotalRondas());
-                
-                // 6. Actualizamos la lista de jugadores en la vista de configuración.
-                // Es útil si el usuario vuelve a esta ventana más tarde.
+
+                // Accedemos a los campos públicos del DTO simplificado
+                controladorVentanaJuego.continuarJuegoCargado(
+                    partidaGuardada.getTotalPartidas(), 
+                    partidaGuardada.getTotalRondas()   
+                );
                 actualizarListaJugadores();
 
             } catch (IOException | NumberFormatException ex) {
-                // 7. Si algo falla durante la carga (archivo no encontrado, formato de número incorrecto),
-                // el catch lo captura y muestra un mensaje de error amigable.
                 JOptionPane.showMessageDialog(ventanaConfig, "Error al cargar la partida: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
             }
         });

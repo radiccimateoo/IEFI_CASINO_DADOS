@@ -81,6 +81,8 @@ public class Casino {
      * @throws IOException Si ocurre un error de lectura o el formato es inválido.
      */
      public casino.modelo.PartidaGuardadaDTO cargarPartida() throws IOException, NumberFormatException {
+        this.jugadores.clear();
+
         try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_GUARDADO))) {
             // Limpiamos la lista de jugadores actual
             this.jugadores.clear();
@@ -88,37 +90,35 @@ public class Casino {
             // Leemos la primera línea (configuración)
             String lineaConfig = reader.readLine();
             if (lineaConfig == null || !lineaConfig.startsWith("config,")) {
-                throw new IOException("Formato de archivo de guardado inválido: falta la línea de configuración.");
+            throw new IOException("Formato de archivo inválido: falta o es incorrecta la línea de configuración.");
             }
             
-            String[] datosConfig = lineaConfig.split(",");
-            int totalPartidas = Integer.parseInt(datosConfig[1]);
-            int totalRondas = Integer.parseInt(datosConfig[2]);
+           String[] datosConfig = lineaConfig.split(",");
+           int totalPartidas = Integer.parseInt(datosConfig[1]);
+           int totalRondas = Integer.parseInt(datosConfig[2]);
 
             // Leemos las líneas de los jugadores
             String lineaJugador;
             while ((lineaJugador = reader.readLine()) != null) {
-                if (!lineaJugador.startsWith("jugador,")) continue; // Ignora líneas mal formateadas
-                
-                String[] datos = lineaJugador.split(",");
-                if (datos.length == 5) {
-                    String nombre = datos[1];
-                    String apodo = datos[2];
-                    String tipo = datos[3];
-                    int dinero = Integer.parseInt(datos[4]);
+                String[] datos = lineaJugador.split(",");    
+                if (datos.length == 4) {
+                    String nombre = datos[0];
+                    String apodo = datos[1];
+                    String tipo = datos[2];
+                    int dinero = Integer.parseInt(datos[3]);
 
-                    // Recreamos el jugador
                     Jugador jugadorCargado = crearJugadorDesdeTipo(nombre, apodo, tipo);
-                    
                     if (jugadorCargado != null) {
                         jugadorCargado.setDinero(dinero);
                         this.jugadores.add(jugadorCargado);
                     }
                 }
             }
-            
+            if (this.jugadores.isEmpty()) {
+                throw new IOException("No se cargó ningún jugador. Verifique el archivo.");
+            }
             // Devolvemos un DTO (Data Transfer Object) con toda la información
-            return new casino.modelo.PartidaGuardadaDTO(totalPartidas, totalRondas, new ArrayList<>(this.jugadores));
+            return new casino.modelo.PartidaGuardadaDTO(totalPartidas, totalRondas, this.jugadores);
 
         } catch (FileNotFoundException e) {
             // Re-lanzamos la excepción para que el controlador la maneje
@@ -236,8 +236,7 @@ public class Casino {
             }
 
             // 3 rondas fijas
-            JuegoDados juego = new JuegoDados(jugadores, this); 
-
+            JuegoDados juego = new JuegoDados(this);
 
             for (int r = 1; r <= cantRondas; r++) {
               if (!juego.isJuegoTerminado()) {

@@ -3,17 +3,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class JuegoDados {
-    
-    private ArrayList<Jugador> jugadores;
+public class JuegoDados {   
     private Dado dado;
     private Casino casino;
     private boolean juegoTerminado; //  bandera para controlar si alguien quedó en 0
     
     // CONSIGNA 4: Se agrega el parametro del objeto casino, para utilizar su metodo
     //actualizarEstgadistica
-    public JuegoDados(ArrayList<Jugador> jugadores, Casino casino) {
-        this.jugadores = jugadores;
+    public JuegoDados(Casino casino) {
         this.dado = new Dado();
         this.casino = casino;
         this.juegoTerminado = false;
@@ -24,7 +21,9 @@ public class JuegoDados {
         if (juegoTerminado) {
             System.out.println("\n️ El juego ya ha finalizado. No se puede jugar más rondas.");
             return null;
-        }
+        }        
+        
+        ArrayList<Jugador> jugadores = casino.getJugadores();
         
         int pozo = 0;
         HashMap<Jugador, Integer> resultados = new HashMap<>();
@@ -43,7 +42,7 @@ public class JuegoDados {
 
         // Ejecutar la habilidad de confundir del casino si existe
         if (jugadorCasino != null) {
-            jugadorConfundido = jugadorCasino.seleccionarJugadorAConfundir(jugadores);
+            jugadorConfundido = jugadorCasino.seleccionarJugadorAConfundir(jugadores);            
             if (jugadorConfundido != null) {
                 System.out.println("¡El Casino confunde a " + jugadorConfundido.getNombreConTipo() + "!");
                 casino.registrarVictima(jugadorConfundido); // CONSIGNA 4: Registrar victima
@@ -51,7 +50,8 @@ public class JuegoDados {
         }
         // Fin elección
 
-        System.out.println("\nApuestas y lanzamientos:");
+        System.out.println("\nApuestas y lanzamientos:");       
+        
         for (Jugador jugador : jugadores) {
             int apuesta = jugador.calcularApuesta();
             if (apuesta > jugador.getDinero()) apuesta = jugador.getDinero();
@@ -139,6 +139,9 @@ public class JuegoDados {
             return null; //  el juego ya no sigue
         }
 
+
+
+        
         return ganadores; // Devuelve todos los ganadores de la ronda
     }
     
