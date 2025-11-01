@@ -3,13 +3,12 @@ package casino.modelo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 
 public class Casino {
     
@@ -55,10 +54,10 @@ public class Casino {
         }
     }
      
-    public void guardarPartida() {
+    public void guardarPartida(int totalPartidas, int totalRondas) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_GUARDADO))) {
             // Escribimos una cabecera para que el archivo sea más legible
-            writer.write("nombre,apodo,tipo,dinero");
+            writer.write(String.format("config,%d,%d", totalPartidas, totalRondas));
             writer.newLine();
             
             for (Jugador j : this.jugadores) {
@@ -76,55 +75,69 @@ public class Casino {
             System.err.println("Error al guardar la partida: " + e.getMessage());
         }
     }   
- 
-    public String cargarPartida() {
+    /**
+     * Carga el estado del juego desde el archivo.
+     * @return Un objeto PartidaGuardadaDTO con los datos cargados.
+     * @throws IOException Si ocurre un error de lectura o el formato es inválido.
+     */
+     public casino.modelo.PartidaGuardadaDTO cargarPartida() throws IOException, NumberFormatException {
         try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_GUARDADO))) {
-            // Limpiamos la lista de jugadores actual antes de cargar la nueva.
+            // Limpiamos la lista de jugadores actual
             this.jugadores.clear();
             
-            String linea;
-            reader.readLine(); // Saltamos la línea de la cabecera (nombre,apodo,tipo,dinero)
+            // Leemos la primera línea (configuración)
+            String lineaConfig = reader.readLine();
+            if (lineaConfig == null || !lineaConfig.startsWith("config,")) {
+                throw new IOException("Formato de archivo de guardado inválido: falta la línea de configuración.");
+            }
+            
+            String[] datosConfig = lineaConfig.split(",");
+            int totalPartidas = Integer.parseInt(datosConfig[1]);
+            int totalRondas = Integer.parseInt(datosConfig[2]);
 
-            while ((linea = reader.readLine()) != null) {
-                String[] datos = linea.split(",");
-                if (datos.length == 4) {
-                    String nombre = datos[0];
-                    String apodo = datos[1];
-                    String tipo = datos[2];
-                    int dinero = Integer.parseInt(datos[3]);
+            // Leemos las líneas de los jugadores
+            String lineaJugador;
+            while ((lineaJugador = reader.readLine()) != null) {
+                if (!lineaJugador.startsWith("jugador,")) continue; // Ignora líneas mal formateadas
+                
+                String[] datos = lineaJugador.split(",");
+                if (datos.length == 5) {
+                    String nombre = datos[1];
+                    String apodo = datos[2];
+                    String tipo = datos[3];
+                    int dinero = Integer.parseInt(datos[4]);
 
-                    Jugador jugadorCargado = null;
-                    // Re-creamos el jugador basado en su tipo
-                    switch (tipo) {
-                        case "Novato":
-                            jugadorCargado = new JugadorNovato(nombre, apodo, 0);
-                            break;
-                        case "Experto":
-                            jugadorCargado = new JugadorExperto(nombre, apodo, 0);
-                            break;
-                        case "VIP":
-                            jugadorCargado = new JugadorVIP(nombre, apodo, 0);
-                            break;
-                        case "El Casino":
-                            jugadorCargado = new JugadorCasino(nombre, 0);
-                            break;
-                    }
+                    // Recreamos el jugador
+                    Jugador jugadorCargado = crearJugadorDesdeTipo(nombre, apodo, tipo);
                     
                     if (jugadorCargado != null) {
-                        jugadorCargado.setDinero(dinero); // Establecemos el dinero guardado
+                        jugadorCargado.setDinero(dinero);
                         this.jugadores.add(jugadorCargado);
                     }
                 }
             }
-            return "Partida cargada exitosamente.";
+            
+            // Devolvemos un DTO (Data Transfer Object) con toda la información
+            return new casino.modelo.PartidaGuardadaDTO(totalPartidas, totalRondas, new ArrayList<>(this.jugadores));
 
         } catch (FileNotFoundException e) {
-            return "Error: No se encontró el archivo de partida guardada.";
-        } catch (IOException | NumberFormatException e) {
-            return "Error al leer el archivo de partida: " + e.getMessage();
+            // Re-lanzamos la excepción para que el controlador la maneje
+            throw new FileNotFoundException("No se encontró el archivo de partida guardada.");
         }
-    }    
-     
+        
+        
+    }
+    
+    private Jugador crearJugadorDesdeTipo(String nombre, String apodo, String tipo) {
+        switch (tipo) {
+            case "Novato": return new JugadorNovato(nombre, apodo, 0);
+            case "Experto": return new JugadorExperto(nombre, apodo, 0);
+            case "VIP": return new JugadorVIP(nombre, apodo, 0);
+            case "El Casino": return new JugadorCasino(nombre, 0);
+            default: return null;
+        }
+    }
+    
     public void actualizarEstadisticas(int apuesta, int puntajeDados, Jugador jugador) {
         if (apuesta > this.mayorApuesta) {
             this.mayorApuesta = apuesta;
@@ -276,6 +289,28 @@ public class Casino {
    
     
     public int getCantPartidas() { return this.cantPartidasTotal; }
-    
+    public class PartidaGuardadaDTO {
+        private final int totalPartidas;
+        private final int totalRondas;
+        private final ArrayList<Jugador> jugadores;
+
+        public PartidaGuardadaDTO(int totalPartidas, int totalRondas, ArrayList<Jugador> jugadores) {
+            this.totalPartidas = totalPartidas;
+            this.totalRondas = totalRondas;
+            this.jugadores = jugadores;
+        }
+
+        public int getTotalPartidas() {
+            return totalPartidas;
+        }
+
+        public int getTotalRondas() {
+            return totalRondas;
+        }
+
+        public ArrayList<Jugador> getJugadores() {
+            return jugadores;
+        }
+    }
     
 }

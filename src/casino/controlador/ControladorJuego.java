@@ -1,10 +1,14 @@
 package casino.controlador;
-import casino.modelo.*;
+import casino.modelo.Casino;
+import casino.modelo.Jugador;
+import casino.modelo.JugadorCasino;
 import casino.vista.VentanaConfiguracion;
-import javax.swing.*;
-import java.util.List;
+import casino.vista.VentanaJuego; 
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import java.io.IOException;
-
+import casino.modelo.PartidaGuardadaDTO;
 
 public class ControladorJuego {
     private Casino casino;
@@ -18,6 +22,7 @@ public class ControladorJuego {
     }
 
     private void configurarEventos() {
+        /* ============= AGREGAR JUGADOR  =============*/
         ventanaConfig.getBtnAgregarJugador().addActionListener(e -> {
             String nombre = ventanaConfig.getTxtNombreJugador().getText().trim();
             String apodo = ventanaConfig.getTxtApodo().getText().trim();
@@ -44,6 +49,8 @@ public class ControladorJuego {
             limpiarCamposJugador();
         });
 
+        
+        /* ============= ELIMINAR JUGADOR  =============*/
         ventanaConfig.getBtnEliminarJugador().addActionListener(e -> {
             String apodo = "";
             JList<String> lista = ventanaConfig.getLstJUgadoresRegistrados();
@@ -77,7 +84,8 @@ public class ControladorJuego {
             }
         });
         
-        
+                
+        /* ============= CONFIRMAR PARTIDA  =============*/
         ventanaConfig.getBtnConfirmarPart().addActionListener(e -> {
             String dineroStr = ventanaConfig.getTxtDineroInicial().getText().trim();
             String rondasStr = ventanaConfig.getTxtRondasPartidas().getText().trim();
@@ -116,40 +124,37 @@ public class ControladorJuego {
             }
         });
 
-        
+                
+        /* ============= JUGAR  =============*/
         ventanaConfig.getBtnJugar().addActionListener(e -> {
-            // 1. Verificar cantidad de jugadores
-            int cantJugadores = casino.getJugadores().size();
-            boolean partidaCargada = false;
-                    
+            // 1. Validaciones
+           int cantJugadores = casino.getJugadores().size();
             if (cantJugadores < 2 || cantJugadores > 4) {
-                JOptionPane.showMessageDialog(ventanaConfig, 
-                    "No se puede iniciar la partida.\nDebe haber entre 2 y 4 jugadores registrados.\nJugadores actuales: " + cantJugadores,
+                JOptionPane.showMessageDialog(ventanaConfig,
+                    "Debe haber entre 2 y 4 jugadores registrados.",
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // 2. Verificar si la partida fue confirmada
             if (!partidaConfirmada) {
                 JOptionPane.showMessageDialog(ventanaConfig,
-                    "No se puede iniciar la partida.\nDebes confirmar la configuración de la partida primero.",
+                    "Debes confirmar la configuración de la partida primero.",
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // 3. Leer valores confirmados
+            
+            // 2. Leer valores confirmados 
             int cantPartidas = getCantidadPartidasSeleccionada();
             int dineroInicial = Integer.parseInt(ventanaConfig.getTxtDineroInicial().getText().trim());
             int cantRondas = Integer.parseInt(ventanaConfig.getTxtRondasPartidas().getText().trim());
             
-
-            // 4. Inicializar dinero de cada jugador
-            if (!partidaCargada) {
-                // 4. Inicializar dinero de cada jugador (solo si es una partida nueva)
-                for (Jugador j : casino.getJugadores()) {
-                    j.setDinero(dineroInicial);
-                }
+            
+            
+            // 3. Inicializar dinero de cada jugador
+            for (Jugador j : casino.getJugadores()) {
+                j.setDinero(dineroInicial);
             }
-           
-            // 5. Comprobar si la trampa está activada
+
+            // 4. Lógica de la trampa
             boolean trampaActiva = ventanaConfig.getChkTrampa().isSelected();
             JugadorCasino jugadorCasino = null;
             for (Jugador j : casino.getJugadores()) {
@@ -166,42 +171,47 @@ public class ControladorJuego {
             } else {
                 System.out.println(" La trampa del Casino está DESACTIVADA. <<<");
             }
-
-            // 6. Reiniciar Estadisticas
-            casino.reiniciarEstadisticas();
-
-            
-            // 7. Iniciar juego
-            List<String> historial = casino.jugar(cantPartidas, cantRondas);
-            casino.guardarHistorial(historial);
-            casino.guardarPartida(); 
-
-            Reporte.generarReporteFinal(casino, cantPartidas);
-
-            JOptionPane.showMessageDialog(ventanaConfig, "Juego finalizado. Revisa el reporte final.");
-        });
-      
-    ventanaConfig.getBtnCargarPartida().addActionListener(e -> {
-        // 1. Pedimos al modelo que cargue los datos.
-        String mensaje = casino.cargarPartida();
-        
-        // 2. Mostramos el resultado al usuario.
-        JOptionPane.showMessageDialog(ventanaConfig, mensaje);
-        
-        // 3. Actualizamos la lista de jugadores en la vista para reflejar los cambios.
-        actualizarListaJugadores();
-        
-        // Opcional: Deshabilitar la configuración de nuevos jugadores si se cargó una partida
-        // para evitar inconsistencias.
-        ventanaConfig.getTxtNombreJugador().setEnabled(false);
-        ventanaConfig.getTxtApodo().setEnabled(false);
-        ventanaConfig.getCmbTipoJugador().setEnabled(false);
-        ventanaConfig.getBtnAgregarJugador().setEnabled(false);
-        ventanaConfig.getBtnEliminarJugador().setEnabled(false);
+            ventanaConfig.setVisible(false);
+            VentanaJuego ventanaJuego = new VentanaJuego();         
+            ControladorVentanaJuego controladorVentanaJuego = new ControladorVentanaJuego(casino, ventanaJuego, ventanaConfig);
+            controladorVentanaJuego.iniciarJuego(cantPartidas, cantRondas);
+                                 
     });        
+                
+        /* ============= CARGAR PARTIDA  =============*/
+        ventanaConfig.getBtnCargarPartida().addActionListener(e -> {
+            try {
+                // 1. Pedimos al modelo que cargue los datos. El método devuelve un DTO.
+                PartidaGuardadaDTO partidaGuardada = casino.cargarPartida();
+                
+                // Si la carga fue exitosa, el DTO no será null (el método lanzaría excepción si falla).
+                // Mostramos un mensaje de éxito al usuario.
+                JOptionPane.showMessageDialog(ventanaConfig, "Partida cargada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                
+                // 2. Ocultamos la ventana de configuración.
+                ventanaConfig.setVisible(false);
+
+                // 3. Creamos la nueva ventana de juego.
+                VentanaJuego ventanaJuego = new VentanaJuego();
+                
+                // 4. Creamos el controlador para la ventana de juego, pasándole las 3 referencias.
+                ControladorVentanaJuego controladorVentanaJuego = new ControladorVentanaJuego(casino, ventanaJuego, ventanaConfig);
+                
+                // 5. Iniciamos el juego con los datos que venían en el DTO (partidas y rondas).
+                controladorVentanaJuego.iniciarJuego(partidaGuardada.getTotalPartidas(), partidaGuardada.getTotalRondas());
+                
+                // 6. Actualizamos la lista de jugadores en la vista de configuración.
+                // Es útil si el usuario vuelve a esta ventana más tarde.
+                actualizarListaJugadores();
+
+            } catch (IOException | NumberFormatException ex) {
+                // 7. Si algo falla durante la carga (archivo no encontrado, formato de número incorrecto),
+                // el catch lo captura y muestra un mensaje de error amigable.
+                JOptionPane.showMessageDialog(ventanaConfig, "Error al cargar la partida: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         
-        
-        // Botón salir
+        /* ============= SALIR  =============*/
         ventanaConfig.getBtnSalir().addActionListener(e -> System.exit(0));
     }
     
