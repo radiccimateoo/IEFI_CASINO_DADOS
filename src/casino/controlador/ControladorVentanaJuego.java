@@ -34,9 +34,6 @@ public class ControladorVentanaJuego {
         // Creamos la ventana de pausa. El 'true' la hace modal.
         this.vistaPausa = new VentanaPausa(vistaJuego, true);
         
-        // Creamos el objeto JuegoDados que usaremos repetidamente
-        this.juegoDados = new JuegoDados(casino.getJugadores(), casino);
-        
         // Inicializamos el mapa para contar las rondas ganadas
         this.rondasGanadasEnPartida = new HashMap<>();
 
@@ -53,6 +50,7 @@ public class ControladorVentanaJuego {
         // Reiniciamos las estadísticas del casino al comenzar la primera partida
         casino.reiniciarEstadisticas();
         
+        this.juegoDados = new JuegoDados(casino);
         // Preparamos el contador de rondas ganadas para la primera partida
         reiniciarContadorRondasPartida();
 
@@ -62,6 +60,26 @@ public class ControladorVentanaJuego {
         // Hacemos visible la ventana del juego
         vistaJuego.setVisible(true);
     }
+    
+     /* @param totalPartidas La configuración de partidas cargada del archivo.
+     * @param totalRondas La configuración de rondas cargada del archivo.
+     */
+    public void continuarJuegoCargado(int totalPartidas, int totalRondas) {
+        this.totalPartidas = totalPartidas;
+        this.totalRondas = totalRondas;
+        
+        this.partidaActual = 1;
+        this.rondaActual = 1;
+
+        casino.reiniciarEstadisticas(); // Las estadísticas de juego (mayor apuesta, etc.) se reinician.
+
+        this.juegoDados = new JuegoDados(casino); 
+
+        reiniciarContadorRondasPartida();
+        actualizarInfoPartidaUI();
+        vistaJuego.setVisible(true);
+    }
+    
     
     private void configurarEventos() {
         /* ============= BOTON AVANZAR  =============*/

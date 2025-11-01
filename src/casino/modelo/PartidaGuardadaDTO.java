@@ -11,15 +11,12 @@ public class PartidaGuardadaDTO {
         this.totalRondas = totalRondas;
         this.jugadores = jugadores;
     }
-
     public int getTotalPartidas() {
         return totalPartidas;
     }
-
     public int getTotalRondas() {
         return totalRondas;
     }
-
     public ArrayList<Jugador> getJugadores() {
         return jugadores;
     }

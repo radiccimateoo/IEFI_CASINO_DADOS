@@ -1,5 +1,5 @@
-config,3,5
-Lucas,Luc,VIP,1397
-Cecilia,Ceci,Experto,533
-Mateo,Mat,Novato,2079
-Estephany,Tefy,Experto,1191
+config,2,5
+Lucas,Luc,VIP,13000
+Cecilia,Ceci,Experto,5200
+Mateo,Mat,Novato,20000
+Estephany,Tefy,Experto,11000
