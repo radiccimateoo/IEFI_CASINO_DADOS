@@ -1,5 +1,4 @@
-config,2,5
-Lucas,Luc,VIP,13000
-Cecilia,Ceci,Experto,5200
-Mateo,Mat,Novato,20000
-Estephany,Tefy,Experto,11000
+config,3,4
+pepito,pepi,VIP,650
+Casino,La Casa,El Casino,600
+milagros,mimi,Novato,550

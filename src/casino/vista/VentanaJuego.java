@@ -49,9 +49,42 @@ public class VentanaJuego extends javax.swing.JFrame {
     private void initComponents() {
 
         pnlInfoPartida = new javax.swing.JPanel();
+        lblPartidaActual = new javax.swing.JLabel();
+        lblRondaActual = new javax.swing.JLabel();
+        lblPozoAcumulado = new javax.swing.JLabel();
         pnlJugadores = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        lblNombreJ1 = new javax.swing.JLabel();
+        lblDineroJ1 = new javax.swing.JLabel();
+        lblVictoriasJ1 = new javax.swing.JLabel();
+        lblApuestaJ1 = new javax.swing.JLabel();
+        lblDadosJ1 = new javax.swing.JLabel();
+        lblEstadoJ1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        lblNombreJ2 = new javax.swing.JLabel();
+        lblDineroJ2 = new javax.swing.JLabel();
+        lblVictoriasJ2 = new javax.swing.JLabel();
+        lblApuestaJ2 = new javax.swing.JLabel();
+        lblDadosJ2 = new javax.swing.JLabel();
+        lblEstadoJ2 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        lblNombreJ3 = new javax.swing.JLabel();
+        lblDineroJ3 = new javax.swing.JLabel();
+        lblVictoriasJ3 = new javax.swing.JLabel();
+        lblApuestaJ3 = new javax.swing.JLabel();
+        lblDadosJ3 = new javax.swing.JLabel();
+        lblEstadoJ3 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        lblNombreJ4 = new javax.swing.JLabel();
+        lblDineroJ4 = new javax.swing.JLabel();
+        lblVictoriasJ4 = new javax.swing.JLabel();
+        lblApuestaJ4 = new javax.swing.JLabel();
+        lblDadosJ4 = new javax.swing.JLabel();
+        lblEstadoJ4 = new javax.swing.JLabel();
         pnlLogEventos = new javax.swing.JPanel();
         btnAvanzar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtLogEventos = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuItemPausar = new javax.swing.JMenuItem();
@@ -66,33 +99,291 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         pnlInfoPartida.setBackground(java.awt.SystemColor.inactiveCaption);
 
+        lblPartidaActual.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblPartidaActual.setText("Partida: -/-");
+
+        lblRondaActual.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblRondaActual.setText("Ronda: -/-");
+
+        lblPozoAcumulado.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblPozoAcumulado.setText("Pozo: $0");
+
         javax.swing.GroupLayout pnlInfoPartidaLayout = new javax.swing.GroupLayout(pnlInfoPartida);
         pnlInfoPartida.setLayout(pnlInfoPartidaLayout);
         pnlInfoPartidaLayout.setHorizontalGroup(
             pnlInfoPartidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(pnlInfoPartidaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblPartidaActual, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(lblRondaActual)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblPozoAcumulado)
+                .addGap(110, 110, 110))
         );
         pnlInfoPartidaLayout.setVerticalGroup(
             pnlInfoPartidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 125, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInfoPartidaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlInfoPartidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPartidaActual, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                    .addComponent(lblRondaActual)
+                    .addComponent(lblPozoAcumulado)))
         );
 
         pnlJugadores.setBackground(java.awt.SystemColor.activeCaption);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Jugador 1", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+        jPanel1.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanel1.setName(""); // NOI18N
+        jPanel1.setPreferredSize(new java.awt.Dimension(87, 177));
+
+        lblNombreJ1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNombreJ1.setText("Nombre: -");
+
+        lblDineroJ1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDineroJ1.setText("Dinero: $-");
+
+        lblVictoriasJ1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblVictoriasJ1.setText("Victorias: 0");
+
+        lblApuestaJ1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblApuestaJ1.setText("Apuesta: $-");
+
+        lblDadosJ1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDadosJ1.setText("Dados: -");
+
+        lblEstadoJ1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreJ1)
+                    .addComponent(lblDineroJ1)
+                    .addComponent(lblVictoriasJ1)
+                    .addComponent(lblDadosJ1))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblEstadoJ1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblApuestaJ1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(lblNombreJ1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDineroJ1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblVictoriasJ1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblApuestaJ1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDadosJ1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblEstadoJ1)
+                .addContainerGap())
+        );
+
+        jPanel2.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Jugador 2", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+
+        lblNombreJ2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNombreJ2.setText("Nombre: -");
+
+        lblDineroJ2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDineroJ2.setText("Dinero: $-");
+
+        lblVictoriasJ2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblVictoriasJ2.setText("Victorias: 0");
+
+        lblApuestaJ2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblApuestaJ2.setText("Apuesta: $-");
+
+        lblDadosJ2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDadosJ2.setText("Dados: -");
+
+        lblEstadoJ2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblEstadoJ2.setText(" ");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreJ2)
+                    .addComponent(lblDineroJ2)
+                    .addComponent(lblApuestaJ2)
+                    .addComponent(lblDadosJ2)
+                    .addComponent(lblVictoriasJ2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(lblEstadoJ2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(lblNombreJ2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDineroJ2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblVictoriasJ2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblApuestaJ2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDadosJ2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblEstadoJ2))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Jugador 3", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+
+        lblNombreJ3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNombreJ3.setText("Nombre: -");
+
+        lblDineroJ3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDineroJ3.setText("Dinero: $-");
+
+        lblVictoriasJ3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblVictoriasJ3.setText("Victorias: 0");
+
+        lblApuestaJ3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblApuestaJ3.setText("Apuesta: $-");
+
+        lblDadosJ3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDadosJ3.setText("Dados: -");
+
+        lblEstadoJ3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblEstadoJ3.setText(" ");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreJ3)
+                    .addComponent(lblDineroJ3)
+                    .addComponent(lblApuestaJ3)
+                    .addComponent(lblDadosJ3)
+                    .addComponent(lblVictoriasJ3))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(lblEstadoJ3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(lblNombreJ3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDineroJ3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblVictoriasJ3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblApuestaJ3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDadosJ3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblEstadoJ3))
+        );
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Jugador 4", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+
+        lblNombreJ4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNombreJ4.setText("Nombre: -");
+
+        lblDineroJ4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDineroJ4.setText("Dinero: $-");
+
+        lblVictoriasJ4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblVictoriasJ4.setText("Victorias: 0");
+
+        lblApuestaJ4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblApuestaJ4.setText("Apuesta: $-");
+
+        lblDadosJ4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDadosJ4.setText("Dados: -");
+
+        lblEstadoJ4.setBackground(new java.awt.Color(255, 255, 204));
+        lblEstadoJ4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblEstadoJ4.setText(" ");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreJ4)
+                    .addComponent(lblDineroJ4)
+                    .addComponent(lblApuestaJ4)
+                    .addComponent(lblDadosJ4)
+                    .addComponent(lblVictoriasJ4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(lblEstadoJ4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(lblNombreJ4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDineroJ4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblVictoriasJ4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblApuestaJ4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDadosJ4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblEstadoJ4))
+        );
 
         javax.swing.GroupLayout pnlJugadoresLayout = new javax.swing.GroupLayout(pnlJugadores);
         pnlJugadores.setLayout(pnlJugadoresLayout);
         pnlJugadoresLayout.setHorizontalGroup(
             pnlJugadoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(pnlJugadoresLayout.createSequentialGroup()
+                .addGap(202, 202, 202)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlJugadoresLayout.setVerticalGroup(
             pnlJugadoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 435, Short.MAX_VALUE)
+            .addGroup(pnlJugadoresLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlJugadoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pnlLogEventos.setBackground(java.awt.SystemColor.inactiveCaption);
 
-        btnAvanzar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
+        javax.swing.GroupLayout pnlLogEventosLayout = new javax.swing.GroupLayout(pnlLogEventos);
+        pnlLogEventos.setLayout(pnlLogEventosLayout);
+        pnlLogEventosLayout.setHorizontalGroup(
+            pnlLogEventosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        pnlLogEventosLayout.setVerticalGroup(
+            pnlLogEventosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        btnAvanzar.setBackground(new java.awt.Color(255, 0, 0));
         btnAvanzar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAvanzar.setForeground(new java.awt.Color(255, 255, 255));
         btnAvanzar.setText("Lanzar Dados / Siguiente Ronda");
@@ -103,22 +394,11 @@ public class VentanaJuego extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout pnlLogEventosLayout = new javax.swing.GroupLayout(pnlLogEventos);
-        pnlLogEventos.setLayout(pnlLogEventosLayout);
-        pnlLogEventosLayout.setHorizontalGroup(
-            pnlLogEventosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlLogEventosLayout.createSequentialGroup()
-                .addGap(221, 221, 221)
-                .addComponent(btnAvanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(254, Short.MAX_VALUE))
-        );
-        pnlLogEventosLayout.setVerticalGroup(
-            pnlLogEventosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlLogEventosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnAvanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(85, Short.MAX_VALUE))
-        );
+        txtLogEventos.setEditable(false);
+        txtLogEventos.setColumns(20);
+        txtLogEventos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtLogEventos.setRows(5);
+        jScrollPane1.setViewportView(txtLogEventos);
 
         jMenu1.setText("Partida");
 
@@ -155,6 +435,8 @@ public class VentanaJuego extends javax.swing.JFrame {
             .addComponent(pnlInfoPartida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnlLogEventos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnlJugadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnAvanzar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +445,12 @@ public class VentanaJuego extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlLogEventos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnAvanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlLogEventos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -204,6 +491,38 @@ public class VentanaJuego extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblApuestaJ1;
+    private javax.swing.JLabel lblApuestaJ2;
+    private javax.swing.JLabel lblApuestaJ3;
+    private javax.swing.JLabel lblApuestaJ4;
+    private javax.swing.JLabel lblDadosJ1;
+    private javax.swing.JLabel lblDadosJ2;
+    private javax.swing.JLabel lblDadosJ3;
+    private javax.swing.JLabel lblDadosJ4;
+    private javax.swing.JLabel lblDineroJ1;
+    private javax.swing.JLabel lblDineroJ2;
+    private javax.swing.JLabel lblDineroJ3;
+    private javax.swing.JLabel lblDineroJ4;
+    private javax.swing.JLabel lblEstadoJ1;
+    private javax.swing.JLabel lblEstadoJ2;
+    private javax.swing.JLabel lblEstadoJ3;
+    private javax.swing.JLabel lblEstadoJ4;
+    private javax.swing.JLabel lblNombreJ1;
+    private javax.swing.JLabel lblNombreJ2;
+    private javax.swing.JLabel lblNombreJ3;
+    private javax.swing.JLabel lblNombreJ4;
+    private javax.swing.JLabel lblPartidaActual;
+    private javax.swing.JLabel lblPozoAcumulado;
+    private javax.swing.JLabel lblRondaActual;
+    private javax.swing.JLabel lblVictoriasJ1;
+    private javax.swing.JLabel lblVictoriasJ2;
+    private javax.swing.JLabel lblVictoriasJ3;
+    private javax.swing.JLabel lblVictoriasJ4;
     private javax.swing.JMenuItem menuItemEstadisticas;
     private javax.swing.JMenuItem menuItemGuardar;
     private javax.swing.JMenuItem menuItemHistorial;
@@ -213,5 +532,6 @@ public class VentanaJuego extends javax.swing.JFrame {
     private javax.swing.JPanel pnlInfoPartida;
     private javax.swing.JPanel pnlJugadores;
     private javax.swing.JPanel pnlLogEventos;
+    private javax.swing.JTextArea txtLogEventos;
     // End of variables declaration//GEN-END:variables
 }
