@@ -3,7 +3,7 @@ package casino.controlador;
 import casino.modelo.Casino;
 import casino.modelo.JuegoDados;
 import casino.modelo.Jugador;
-import casino.modelo.Reporte; 
+//import casino.modelo.Reporte; 
 import casino.vista.VentanaJuego;
 import casino.vista.VentanaPausa;
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class ControladorVentanaJuego {
         this.juegoDados = new JuegoDados(casino); 
 
         reiniciarContadorRondasPartida();
-        actualizarInfoPartidaUI();
+        actualizarInfoPartidaUI(0);
         vistaJuego.setVisible(true);
     }
     
@@ -241,7 +241,7 @@ public class ControladorVentanaJuego {
         // El total de partidas jugadas puede ser menor si alguien quebró.
         int partidasJugadas = (partidaActual > totalPartidas) ? totalPartidas : partidaActual -1;
          if (partidasJugadas < 1) partidasJugadas = 1;
-        Reporte.generarReporteFinal(casino, partidasJugadas);
+        //Reporte.generarReporteFinal(casino, partidasJugadas);
         
         casino.guardarPartida(this.totalPartidas, this.totalRondas);         
         System.out.println("Reporte final generado. Cierra esta ventana para volver a configurar.");
