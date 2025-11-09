@@ -8,15 +8,17 @@ public class JuegoDados {
     private Casino casino;
     private boolean juegoTerminado; //  bandera para controlar si alguien quedó en 0
     
+    private int ultimoPozo;
     // CONSIGNA 4: Se agrega el parametro del objeto casino, para utilizar su metodo
     //actualizarEstgadistica
     public JuegoDados(Casino casino) {
         this.dado = new Dado();
         this.casino = casino;
         this.juegoTerminado = false;
+        this.ultimoPozo = 0;
     }
 
-    public List<Jugador> jugarRonda() {
+    public ResultadoRondaDTO jugarRonda() {
         
         if (juegoTerminado) {
             System.out.println("\n️ El juego ya ha finalizado. No se puede jugar más rondas.");
@@ -26,6 +28,7 @@ public class JuegoDados {
         ArrayList<Jugador> jugadores = casino.getJugadores();
         
         int pozo = 0;
+        HashMap<Jugador, InfoTiroDTO> resultadosIndividuales = new HashMap<>();
         HashMap<Jugador, Integer> resultados = new HashMap<>();
 
         // Consigna 3: Habilidad Confusión - elección del jugador confundido
@@ -59,6 +62,7 @@ public class JuegoDados {
             pozo += apuesta;
 
             int tiro1, tiro2, suma;
+            boolean fueConfundido = jugador.equals(jugadorConfundido);
 
             // Consigna 3: Se incorpora el tiro de dados cargados del jugadorCasino
             if (jugador instanceof JugadorCasino) {
@@ -73,7 +77,7 @@ public class JuegoDados {
             }
 
             // Aplica la penalización si el jugador actual es el confundido
-            if (jugador.equals(jugadorConfundido)) {
+            if (fueConfundido) {
                   tiro1 = Math.max(1, tiro1 - 1);
                   tiro2 = Math.max(1, tiro2 - 1);
                   System.out.println(" -> ¡El efecto de la confusión reduce el puntaje de " + jugador.getNombreConTipo() + "!");
@@ -98,7 +102,7 @@ public class JuegoDados {
             // Se hace para CADA jugador, dentro del bucle.
             casino.actualizarEstadisticas(apuesta, suma, jugador);
 
-            resultados.put(jugador, suma);
+            resultadosIndividuales.put(jugador, new InfoTiroDTO(apuesta, tiro1, tiro2, suma, fueConfundido));
         } // <-- FIN DEL BUCLE for
 
         // Determinar puntaje más alto
@@ -139,16 +143,49 @@ public class JuegoDados {
             return null; //  el juego ya no sigue
         }
 
-
-
+        this.ultimoPozo = pozo;
         
-        return ganadores; // Devuelve todos los ganadores de la ronda
+        if (juegoTerminado) {
+            return null;
+        }
+        
+        return new ResultadoRondaDTO(ganadores, resultadosIndividuales);
+        //return ganadores; // Devuelve todos los ganadores de la ronda
+    }
+    
+    public int getUltimoPozo() {
+        return ultimoPozo;
     }
     
     public boolean isJuegoTerminado() {
         return juegoTerminado;
     }
 
+    public static class InfoTiroDTO {
+    public final int apuesta;
+    public final int tiro1;
+    public final int tiro2;
+    public final int suma;
+    public final boolean fueConfundido;
 
+    public InfoTiroDTO(int apuesta, int tiro1, int tiro2, int suma, boolean fueConfundido) {
+        this.apuesta = apuesta;
+        this.tiro1 = tiro1;
+        this.tiro2 = tiro2;
+        this.suma = suma;
+        this.fueConfundido = fueConfundido;
+    }
     
+}
+
+    public static class ResultadoRondaDTO {
+    public final List<Jugador> ganadores;
+    public final HashMap<Jugador, InfoTiroDTO> resultadosIndividuales;
+
+    public ResultadoRondaDTO(List<Jugador> ganadores, HashMap<Jugador, InfoTiroDTO> resultados) {
+        this.ganadores = ganadores;
+        this.resultadosIndividuales = resultados;
+        }
+    }
+
 }

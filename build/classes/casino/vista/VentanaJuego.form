@@ -23,6 +23,12 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Salir de la Partida"/>
               </Properties>
+              <AccessibilityProperties>
+                <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Salir"/>
+              </AccessibilityProperties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemSalirActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -111,7 +117,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lblPartidaActual" min="-2" pref="94" max="-2" attributes="0"/>
+                  <Component id="lblPartidaActual" min="-2" pref="111" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="lblRondaActual" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
