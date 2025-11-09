@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Casino {
     
@@ -241,13 +243,18 @@ public class Casino {
             for (int r = 1; r <= cantRondas; r++) {
               if (!juego.isJuegoTerminado()) {
                     System.out.println("\n---- Ronda " + r);
-                    List<Jugador> ganadoresRonda = juego.jugarRonda();
                     
-                    if (ganadoresRonda == null) {
+                    JuegoDados.ResultadoRondaDTO resultadoRonda = juego.jugarRonda();
+                    
+                    if (resultadoRonda == null) {
                         System.out.println("️ Juego finalizado anticipadamente en la ronda " + r + " de la partida " + i);
                         cantPartidasTotal = i;
                         return detalles;
                     }
+                    
+                    //Se extrae la lista de ganadores desde el DTO
+                    List<Jugador> ganadoresRonda = resultadoRonda.ganadores;
+                    
                     for (Jugador g : ganadoresRonda) {
                         rondasGanadas.put(g, rondasGanadas.get(g) + 1);
                     }
