@@ -101,6 +101,7 @@ public class JuegoDados {
             // CONSIGNA 4: ¡LUGAR CORRECTO PARA ACTUALIZAR ESTADÍSTICAS!
             // Se hace para CADA jugador, dentro del bucle.
             casino.actualizarEstadisticas(apuesta, suma, jugador);
+            resultados.put(jugador, suma);
 
             resultadosIndividuales.put(jugador, new InfoTiroDTO(apuesta, tiro1, tiro2, suma, fueConfundido));
         } // <-- FIN DEL BUCLE for

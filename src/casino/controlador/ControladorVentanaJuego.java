@@ -11,6 +11,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import casino.vista.VentanaConfiguracion; 
 import javax.swing.SwingUtilities;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class ControladorVentanaJuego {
     private Casino casino;
@@ -101,6 +103,45 @@ public class ControladorVentanaJuego {
         vistaPausa.getBtnGuardarPausa().addActionListener(e -> {
             casino.guardarPartida(this.totalPartidas, this.totalRondas);
             JOptionPane.showMessageDialog(vistaPausa, "Partida guardada.");
+        });
+        
+        // --- Evento del Menú "Ranking Actual" ---
+        vistaJuego.getMenuItemRanking().addActionListener(e -> {
+            StringBuilder rankingMsg = new StringBuilder("--- RANKING ACTUAL ---\n\n");
+            ArrayList<Jugador> jugadoresOrdenados = new ArrayList<>(casino.getJugadores());
+            jugadoresOrdenados.sort(Comparator.comparingInt(Jugador::getDinero).reversed());
+            
+            int pos = 1;
+            for (Jugador j : jugadoresOrdenados) {
+                rankingMsg.append(pos).append(". ").append(j.getNombreConTipo()).append(" - $").append(j.getDinero()).append("\n");
+                pos++;
+            }
+            JOptionPane.showMessageDialog(vistaJuego, rankingMsg.toString(), "Ranking Actual", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
+        // --- Evento del Menú "Historial de Partidas" ---
+        vistaJuego.getMenuItemHistorial().addActionListener(e -> {
+            try {
+                String historial = casino.leerHistorial();
+                if (historial.isEmpty()) {
+                    historial = "Aún no hay historial de partidas guardado.";
+                }
+                javax.swing.JTextArea textArea = new javax.swing.JTextArea(historial, 20, 50);
+                textArea.setEditable(false);
+                javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(textArea);
+                JOptionPane.showMessageDialog(vistaJuego, scrollPane, "Historial de Partidas", JOptionPane.INFORMATION_MESSAGE);
+            } catch (java.io.IOException ex) {
+                JOptionPane.showMessageDialog(vistaJuego, "Error al leer el historial: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        // --- Evento del Menú "Estadísticas Generales" ---
+        vistaJuego.getMenuItemEstadisticas().addActionListener(e -> {
+            StringBuilder statsMsg = new StringBuilder("--- ESTADÍSTICAS GENERALES ---\n\n");
+            statsMsg.append("Mayor apuesta realizada: $").append(casino.getMayorApuesta()).append(" por ").append(casino.getNombreJugadorMayorApuesta()).append("\n");
+            statsMsg.append("Mejor puntaje de dados: ").append(casino.getMejorPuntajeDados()).append(" por ").append(casino.getNombreJugadorMejorPuntaje()).append("\n");
+            statsMsg.append("Veces que el Casino usó dados cargados: ").append(casino.getConteoDadosCargados()).append("\n");
+            JOptionPane.showMessageDialog(vistaJuego, statsMsg.toString(), "Estadísticas Generales", JOptionPane.INFORMATION_MESSAGE);
         });
         
         vistaPausa.getBtnSalirPausa().addActionListener(e -> {

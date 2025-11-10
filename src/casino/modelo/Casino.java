@@ -130,6 +130,16 @@ public class Casino {
         
     }
     
+    public String leerHistorial() throws java.io.IOException {
+        String nombreArchivo = "historial_partidas.txt";
+        if (Files.exists(Paths.get(nombreArchivo))) {
+            // Lee todas las líneas y las une con un salto de línea.
+            return String.join("\n", Files.readAllLines(Paths.get(nombreArchivo)));
+        } else {
+            return ""; // Devuelve vacío si el archivo no existe
+        }
+    }
+     
     private Jugador crearJugadorDesdeTipo(String nombre, String apodo, String tipo) {
         switch (tipo) {
             case "Novato": return new JugadorNovato(nombre, apodo, 0);
