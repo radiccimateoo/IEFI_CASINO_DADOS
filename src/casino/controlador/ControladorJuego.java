@@ -141,7 +141,7 @@ public class ControladorJuego {
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             // 2. Leer valores confirmados 
             int cantPartidas = getCantidadPartidasSeleccionada();
             int dineroInicial = Integer.parseInt(ventanaConfig.getTxtDineroInicial().getText().trim());

@@ -14,6 +14,9 @@ import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import casino.vista.VentanaReporteFinal;
+
+
 public class ControladorVentanaJuego {
     private Casino casino;
     private VentanaJuego vistaJuego;
@@ -52,6 +55,8 @@ public class ControladorVentanaJuego {
         casino.reiniciarEstadisticas();
         
         this.juegoDados = new JuegoDados(casino);
+        
+        
         // Preparamos el contador de rondas ganadas para la primera partida
         reiniciarContadorRondasPartida();
 
@@ -66,6 +71,7 @@ public class ControladorVentanaJuego {
         // Hacemos visible la ventana del juego
         vistaJuego.setVisible(true);
     }
+    
     
      /* @param totalPartidas La configuración de partidas cargada del archivo.
      * @param totalRondas La configuración de rondas cargada del archivo.
@@ -273,6 +279,10 @@ public class ControladorVentanaJuego {
     private void finalizarJuego(String motivo) {
         JOptionPane.showMessageDialog(vistaJuego, "¡Juego Terminado! Motivo: " + motivo);
         
+        //CONSIGNA 4
+        mostrarReporteFinal();
+        //FIN
+        
         // Deshabilitamos los controles del juego
         vistaJuego.getBtnAvanzar().setEnabled(false);
         vistaJuego.getMenuItemPausar().setEnabled(false);
@@ -327,7 +337,28 @@ public class ControladorVentanaJuego {
         // En caso de empate, se puede mejorar la lógica, pero por ahora devuelve el primero que encuentre.
         return (ganador != null) ? ganador : casino.getJugadores().get(0);
     }
+  
+    //CONSIGNA 4 
+    private void mostrarReporteFinal() {
+    // 1. Instanciar la Vista de Reporte
+    VentanaReporteFinal vistaReporte = new VentanaReporteFinal();
+
+    // 2. 🟪 OBTENER DATOS DEL MODELO (ya ordenados)
+    // El método getRankingJugadores() que creamos en Casino.java
+    List<Jugador> ranking = casino.getRankingJugadores(); 
     
+    // 3. 🟦 ACTUALIZAR LA VISTA con los datos del ranking
+    vistaReporte.mostrarRanking(ranking);
+    
+    // Opcional: Llenar otras estadísticas (Mayor Apuesta, etc.) aquí.
+    // vistaReporte.setMayorApuesta(casino.getMayorApuesta());
+    
+    // 4. Mostrar la Ventana
+    vistaReporte.setVisible(true);
+    
+    // Opcional: Cerrar VentanaJuego
+    vistaJuego.dispose(); 
+}
     //private void actualizarInfoPartidaUI(){
         // ESTE MÉTODO SERÁ CLAVE. Llenará los JLabels de la ventana de juego.
         // Por ahora, solo imprime en consola para demostrar el flujo.

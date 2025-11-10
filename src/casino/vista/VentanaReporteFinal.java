@@ -4,6 +4,9 @@
  */
 package casino.vista;
 
+import casino.modelo.Jugador;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Ceciia
@@ -17,6 +20,41 @@ public class VentanaReporteFinal extends javax.swing.JFrame {
         initComponents();
     }
 
+    //CONSIGNA 4 - TABLA
+    // Si es private, agrega este getter:
+public javax.swing.JTable getTblRanking() {
+    return tblRanking;
+}
+
+public void mostrarRanking(List<Jugador> jugadoresEnRanking) {
+    // 1. Definir los encabezados de la tabla
+    String[] columnNames = {"Nombre", "Tipo de Jugador", "Dinero (Saldo)", "Victorias"};
+    
+    // 2. Crear el modelo
+    DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // No permitir edición
+        }
+    };
+
+    // 3. Llenar el modelo con los datos de los jugadores ordenados
+    for (Jugador jugador : jugadoresEnRanking) {
+        Object[] rowData = new Object[4];
+        
+        // Usamos los métodos de Jugador validados previamente:
+        rowData[0] = jugador.getNombre();
+        rowData[1] = jugador.obtenerTipoJugador(); // Implementado en subclases
+        rowData[2] = "$" + jugador.getDinero();    // Dinero actual (Saldo)
+        rowData[3] = jugador.getPartidasGanadas(); // Victorias totales
+        
+        model.addRow(rowData);
+    }
+
+    // 4. Asignar el modelo a la JTable
+    tblRanking.setModel(model);
+}
+//FIN CONSIGNA 4 - TABLA
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -321,7 +359,7 @@ public class VentanaReporteFinal extends javax.swing.JFrame {
     private javax.swing.JLabel lblJugadoresAfectados;
     private javax.swing.JLabel lblMayorApuesta;
     private javax.swing.JLabel lblMejorPuntaje;
-    private javax.swing.JTable tblRanking;
+    public javax.swing.JTable tblRanking;
     private javax.swing.JTextArea txtHistorial;
     // End of variables declaration//GEN-END:variables
 }
