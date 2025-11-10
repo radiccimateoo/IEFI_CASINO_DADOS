@@ -15,12 +15,15 @@ import java.util.ArrayList;
  */
 public class Reporte {
     
+    // Nuevo atributo: la referencia al objeto Casino
+    private final Casino casino; 
     private List<Jugador> jugadoresFinales;
 
-    // El Reporte necesita la lista de jugadores para procesar los datos
-    public Reporte(List<Jugador> jugadores) {
-        // Se recomienda pasar una copia para no modificar accidentalmente la lista del Casino
-        this.jugadoresFinales = new ArrayList<>(jugadores); 
+    // CONSTRUCTOR REFRACTORIZADO: Ahora recibe el Casino
+    public Reporte(Casino casino) { 
+        this.casino = casino;
+        // Obtenemos la lista de jugadores del Casino
+        this.jugadoresFinales = new ArrayList<>(casino.getJugadores()); 
     }
 
     /**
@@ -47,4 +50,29 @@ public class Reporte {
         return this.jugadoresFinales;
     }
    
+    // === MÉTODOS PARA ESTADÍSTICAS  ===
+    
+    // lblMayorApuesta: Mayor apuesta realizada (monto + jugador)
+    public String getMayorApuestaInfo() {
+        int monto = casino.getMayorApuesta();
+        String nombre = casino.getNombreJugadorMayorApuesta();
+        // El modelo devuelve la información formateada como String
+        return String.format("$%d (%s)", monto, nombre);
+    }
+
+    // lblMejorPuntaje: Mejor puntaje de dados (valor + jugador)
+    public String getMejorPuntajeInfo() {
+        int puntaje = casino.getMejorPuntajeDados();
+        String nombre = casino.getNombreJugadorMejorPuntaje();
+        // El modelo devuelve la información formateada como String
+        return String.format("%d (%s)", puntaje, nombre);
+    }
+    
+    // lblJugadoresAfectados: Jugadores afectados por trampas (total)
+    public String getJugadoresAfectadosInfo() {
+        // Asumimos que Casino tiene el método getCantidadJugadoresAfectados()
+        int afectados = casino.getCantidadJugadoresAfectados(); 
+        // El modelo devuelve la información formateada como String
+        return String.format("%d Jugadores", afectados);
+    }
 }

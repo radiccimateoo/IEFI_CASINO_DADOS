@@ -330,5 +330,12 @@ public class Casino {
         }
     }
     
-  
+    //CONSIGNA 4
+    // Getter necesario para que Reporte pueda obtener el total
+    public int getCantidadJugadoresAfectados() {
+    // La clave del HashMap "victimasDeTrampas" es el nombre del jugador afectado.
+    // El tamaño de las claves es el número de jugadores únicos.
+    return victimasDeTrampas.keySet().size();
+}
+    
 }

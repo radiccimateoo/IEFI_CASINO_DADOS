@@ -55,6 +55,15 @@ public void mostrarRanking(List<Jugador> jugadoresEnRanking) {
     tblRanking.setModel(model);
 }
 //FIN CONSIGNA 4 - TABLA
+
+//ESTADÍSTICAS
+    public void mostrarEstadisticas(String mayorApuestaInfo, String mejorPuntajeInfo, String afectadosInfo) {
+
+        // Asigna las cadenas formateadas directamente a los JLabels
+        lblMayorApuesta.setText(mayorApuestaInfo);
+        lblMejorPuntaje.setText(mejorPuntajeInfo);
+        lblJugadoresAfectados.setText(afectadosInfo);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

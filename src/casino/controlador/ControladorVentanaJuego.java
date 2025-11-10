@@ -343,19 +343,28 @@ public class ControladorVentanaJuego {
     // 1. Instanciar la Vista de Reporte
     VentanaReporteFinal vistaReporte = new VentanaReporteFinal();
 
-    // 2. 🟪 GENERAR EL REPORTE (Controlador orquesta)
-    // Se crea la instancia de Reporte pasándole la lista actual de jugadores del Casino.
-    Reporte reporte = new Reporte(casino.getJugadores());
+    // 2. 🟪 CREAR EL REPORTE Y OBTENER LA INFORMACIÓN 
+    // Se le pasa la instancia del Casino que tiene el controlador
+    Reporte reporte = new Reporte(casino); 
+    
+    // 3. OBTENER DATOS DE ESTADÍSTICAS
+    String mayorApuestaInfo = reporte.getMayorApuestaInfo();
+    String mejorPuntajeInfo = reporte.getMejorPuntajeInfo();
+    String afectadosInfo = reporte.getJugadoresAfectadosInfo();
+    
+    // 4. ACTUALIZAR LA VISTA con las Estadísticas
+    vistaReporte.mostrarEstadisticas(
+        mayorApuestaInfo, 
+        mejorPuntajeInfo, 
+        afectadosInfo
+    );
 
-    // 3. OBTENER DATOS ORDENADOS DEL REPORTE
+    // 5. OBTENER y mostrar el Ranking (Lógica anterior)
     List<Jugador> ranking = reporte.getRankingJugadores(); 
+    vistaReporte.mostrarRanking(ranking); 
     
-    // 4. 🟦 ACTUALIZAR LA VISTA con los datos del ranking
-    vistaReporte.mostrarRanking(ranking);
-    
-    // 5. Mostrar la Ventana
+    // 6. Mostrar la Ventana
     vistaReporte.setVisible(true);
-    
     vistaJuego.dispose();
 }
     //private void actualizarInfoPartidaUI(){

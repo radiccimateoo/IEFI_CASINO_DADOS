@@ -1,5 +1,4 @@
 config,2,2
-aaaaa,aaa,Novato,400
-Casino,La Casa,El Casino,3204
-bbbbb,bbb,Experto,243
-ccccc,ccc,VIP,152
+AAAAA,AAA,Novato,300
+Casino,La Casa,El Casino,1079
+BBBBB,BBBB,VIP,121
