@@ -19,7 +19,7 @@ public class Reporte {
     private final Casino casino; 
     private List<Jugador> jugadoresFinales;
 
-    // CONSTRUCTOR REFRACTORIZADO: Ahora recibe el Casino
+    // CONSTRUCTOR 
     public Reporte(Casino casino) { 
         this.casino = casino;
         // Obtenemos la lista de jugadores del Casino
@@ -74,5 +74,35 @@ public class Reporte {
         int afectados = casino.getCantidadJugadoresAfectados(); 
         // El modelo devuelve la información formateada como String
         return String.format("%d Jugadores", afectados);
+    }
+    
+    // === NUEVO MÉTODO: HISTORIAL ===
+    
+    /**
+     * Obtiene el historial de las últimas 3 partidas jugadas, leyendo desde el archivo.
+     * @return Una cadena de texto con las partidas listadas, separadas por salto de línea.
+     */
+    public String getHistorialUltimasTresPartidas() {
+        // Usa el nuevo método de Casino para leer el archivo.
+        List<String> historialCompleto = casino.leerHistorialCompleto(); 
+        
+        if (historialCompleto.isEmpty()) {
+            return "Aún no hay partidas registradas.";
+        }
+        
+        int total = historialCompleto.size();
+        // Calcula el índice de inicio: el mayor entre 0 y el total menos 3.
+        int startIndex = Math.max(0, total - 3); 
+        
+        // Obtiene la sublista de las últimas 3 partidas
+        List<String> ultimasTres = historialCompleto.subList(startIndex, total);
+        
+        // Concatena las partidas en un solo String, separadas por salto de línea.
+        StringBuilder sb = new StringBuilder();
+        for (String partida : ultimasTres) {
+            sb.append(partida).append("\n");
+        }
+        
+        return sb.toString().trim(); // Retorna el historial formateado
     }
 }

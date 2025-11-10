@@ -1,4 +1,4 @@
 config,2,2
-AAAAA,AAA,Novato,300
-Casino,La Casa,El Casino,1079
-BBBBB,BBBB,VIP,121
+AAAAA,AAA,Novato,47
+Casino,La Casa,El Casino,1394
+BBBBB,BBB,Experto,58

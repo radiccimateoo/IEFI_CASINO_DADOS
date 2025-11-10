@@ -64,6 +64,16 @@ public void mostrarRanking(List<Jugador> jugadoresEnRanking) {
         lblMejorPuntaje.setText(mejorPuntajeInfo);
         lblJugadoresAfectados.setText(afectadosInfo);
     }
+    
+   
+ //HITORIAL: Muestra el texto del historial de partidas
+ 
+public void mostrarHistorial(String historial) {
+    // Necesitas asegurarte de que tengas una variable llamada txtHistorial en tu clase.
+    // Si no es visible, puedes agregar un getter (public JTextArea getTxtHistorial())
+    // o modificar el método initComponents().
+    txtHistorial.setText(historial); 
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -369,6 +379,6 @@ public void mostrarRanking(List<Jugador> jugadoresEnRanking) {
     private javax.swing.JLabel lblMayorApuesta;
     private javax.swing.JLabel lblMejorPuntaje;
     public javax.swing.JTable tblRanking;
-    private javax.swing.JTextArea txtHistorial;
+    public javax.swing.JTextArea txtHistorial;
     // End of variables declaration//GEN-END:variables
 }

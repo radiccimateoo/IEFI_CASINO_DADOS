@@ -257,10 +257,28 @@ public class ControladorVentanaJuego {
         Jugador ganadorPartida = determinarGanadorPartida();
         ganadorPartida.sumarVictoria();
         
+        //CONSIGNA 4 - REGISTRAR PARTIDAS
+        // Obtenemos la cantidad de rondas ganadas por el ganador en esta partida
+        int rondasGanadas = rondasGanadasEnPartida.getOrDefault(ganadorPartida, 0);
+
+        // 2. 🟨 CONSTRUIR LA CADENA DE DETALLE (Variable 'detalle')
+        // Formato: "PARTIDA #N - Ganador: Nombre | Rondas: X de Y"
+        String detalleHistorial = String.format("PARTIDA #%d - Ganador: %s | Rondas: %d de %d", 
+                                              partidaActual, 
+                                              ganadorPartida.getNombre(), // O el método que devuelve el nombre y tipo si es necesario
+                                              rondasGanadas, 
+                                              totalRondas); // totalRondas debe ser accesible como atributo de la clase
+
+        // 3. 💾 REGISTRAR EN EL ARCHIVO (Llamada al método con la variable ya construida)
+        casino.registrarPartidaEnHistorial(detalleHistorial);
+
+    //FIN CONSIGNA 4
+        
         // Mostramos un mensaje al usuario
         vistaJuego.agregarAlLog(String.format(">>> Fin de la Partida %d. Ganador: %s <<<", partidaActual, ganadorPartida.getNombre()));    
         JOptionPane.showMessageDialog(vistaJuego, "Fin de la Partida " + partidaActual + ". Ganador: " + ganadorPartida.getNombre());
         
+   
         // Avanzamos a la siguiente partida
         partidaActual++;
         rondaActual = 1;
@@ -362,6 +380,10 @@ public class ControladorVentanaJuego {
     // 5. OBTENER y mostrar el Ranking (Lógica anterior)
     List<Jugador> ranking = reporte.getRankingJugadores(); 
     vistaReporte.mostrarRanking(ranking); 
+    
+    //// 🟨 NUEVO: OBTENER y mostrar el Historial
+    String historial = reporte.getHistorialUltimasTresPartidas();
+    vistaReporte.mostrarHistorial(historial);
     
     // 6. Mostrar la Ventana
     vistaReporte.setVisible(true);
