@@ -12,10 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Casino {
     
@@ -334,23 +330,5 @@ public class Casino {
         }
     }
     
-    //CONSIGNA 4
-    public List<Jugador> getRankingJugadores() {
-    // Hacemos una copia para no alterar la lista principal de jugadores
-    List<Jugador> jugadoresClonados = new ArrayList<>(this.jugadores); 
-    
-    Collections.sort(jugadoresClonados, new Comparator<Jugador>() {
-        @Override
-        public int compare(Jugador j1, Jugador j2) {
-            // 1. Criterio: Partidas Ganadas (Mayor a Menor)
-            int comparacionVictorias = Integer.compare(j2.getPartidasGanadas(), j1.getPartidasGanadas());
-            if (comparacionVictorias != 0) {
-                return comparacionVictorias;
-            }
-            // 2. Criterio: Dinero (Mayor a Menor, desempate)
-            return Integer.compare(j2.getDinero(), j1.getDinero());
-        }
-    });
-    return jugadoresClonados;
-}
+  
 }

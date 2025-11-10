@@ -13,8 +13,8 @@ import casino.vista.VentanaConfiguracion;
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.util.Comparator;
-
-import casino.vista.VentanaReporteFinal;
+import casino.modelo.Reporte; //C4
+import casino.vista.VentanaReporteFinal;//C4
 
 
 public class ControladorVentanaJuego {
@@ -343,21 +343,20 @@ public class ControladorVentanaJuego {
     // 1. Instanciar la Vista de Reporte
     VentanaReporteFinal vistaReporte = new VentanaReporteFinal();
 
-    // 2. 🟪 OBTENER DATOS DEL MODELO (ya ordenados)
-    // El método getRankingJugadores() que creamos en Casino.java
-    List<Jugador> ranking = casino.getRankingJugadores(); 
+    // 2. 🟪 GENERAR EL REPORTE (Controlador orquesta)
+    // Se crea la instancia de Reporte pasándole la lista actual de jugadores del Casino.
+    Reporte reporte = new Reporte(casino.getJugadores());
+
+    // 3. OBTENER DATOS ORDENADOS DEL REPORTE
+    List<Jugador> ranking = reporte.getRankingJugadores(); 
     
-    // 3. 🟦 ACTUALIZAR LA VISTA con los datos del ranking
+    // 4. 🟦 ACTUALIZAR LA VISTA con los datos del ranking
     vistaReporte.mostrarRanking(ranking);
     
-    // Opcional: Llenar otras estadísticas (Mayor Apuesta, etc.) aquí.
-    // vistaReporte.setMayorApuesta(casino.getMayorApuesta());
-    
-    // 4. Mostrar la Ventana
+    // 5. Mostrar la Ventana
     vistaReporte.setVisible(true);
     
-    // Opcional: Cerrar VentanaJuego
-    vistaJuego.dispose(); 
+    vistaJuego.dispose();
 }
     //private void actualizarInfoPartidaUI(){
         // ESTE MÉTODO SERÁ CLAVE. Llenará los JLabels de la ventana de juego.
