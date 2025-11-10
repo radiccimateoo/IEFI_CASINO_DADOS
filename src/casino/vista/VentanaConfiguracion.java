@@ -23,6 +23,16 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
     public VentanaConfiguracion() {
         initComponents();
     }
+   
+    //uso de la activación de trampa
+    public javax.swing.JCheckBox getChkActDescTrampa() {
+    return chkActDescTrampa;
+}
+
+    // método que devuelve directamente el estado de la trampa
+    public boolean isTrampaActivadaSeleccionada() {
+        return chkActDescTrampa.isSelected();
+}
     
     //CREAMOS GETTERS PARA TENER ACCESO A LOS COMPONENTES
     public JButton getBtnAgregarJugador() { return btnAgregarJugador; }
@@ -305,7 +315,7 @@ public class VentanaConfiguracion extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarJugador;
     private javax.swing.JButton btnJugar2;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JCheckBox chkActDescTrampa;
+    public javax.swing.JCheckBox chkActDescTrampa;
     private javax.swing.JComboBox<String> cmbTipoJugador;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

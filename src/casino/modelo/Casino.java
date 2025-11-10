@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
 public class Casino {
     
     private ArrayList<Jugador> jugadores;
@@ -23,7 +24,7 @@ public class Casino {
     private HashMap<String, Integer> victimasDeTrampas = new HashMap<>();
     public int cantPartidasTotal = 0;
     private static final String ARCHIVO_GUARDADO = "partida_guardada.txt";
-
+    private static final String ARCHIVO_HISTORIAL = "historial_partidas.txt"; //CONSIGNA 4
     
     public Casino() {
         jugadores = new ArrayList<>();
@@ -130,6 +131,16 @@ public class Casino {
         
     }
     
+    public String leerHistorial() throws java.io.IOException {
+        String nombreArchivo = "historial_partidas.txt";
+        if (Files.exists(Paths.get(nombreArchivo))) {
+            // Lee todas las líneas y las une con un salto de línea.
+            return String.join("\n", Files.readAllLines(Paths.get(nombreArchivo)));
+        } else {
+            return ""; // Devuelve vacío si el archivo no existe
+        }
+    }
+     
     private Jugador crearJugadorDesdeTipo(String nombre, String apodo, String tipo) {
         switch (tipo) {
             case "Novato": return new JugadorNovato(nombre, apodo, 0);
@@ -319,4 +330,45 @@ public class Casino {
         }
     }
     
+    //CONSIGNA 4
+    // Getter necesario para que Reporte pueda obtener el total
+    public int getCantidadJugadoresAfectados() {
+        // La clave del HashMap "victimasDeTrampas" es el nombre del jugador afectado.
+        // El tamaño de las claves es el número de jugadores únicos.
+        return victimasDeTrampas.keySet().size();
+    }
+
+    //CONSIGNA 4
+    //Escribe el detalle de una partida en el archivo de historial.     
+    
+    public void registrarPartidaEnHistorial(String detalle) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_HISTORIAL, true))) {
+            // El 'true' en FileWriter indica que se debe anexar (append) al archivo
+            writer.write(detalle);
+            writer.newLine(); // Añadir un salto de línea después de cada registro
+        } catch (IOException e) {
+            System.err.println("Error al escribir el historial: " + e.getMessage());
+            // Manejo de error simple, se puede mejorar
+        }
+    }
+    
+    /**
+    * Lee todo el historial de partidas del archivo.
+    * @return Una lista de Strings con el historial completo.
+    */
+   public List<String> leerHistorialCompleto() {
+       List<String> historial = new ArrayList<>();
+       try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_HISTORIAL))) {
+           String linea;
+           while ((linea = reader.readLine()) != null) {
+               historial.add(linea);
+           }
+       } catch (FileNotFoundException e) {
+           // El archivo no existe (primera ejecución), retorna lista vacía. Es normal.
+           return historial; 
+       } catch (IOException e) {
+           System.err.println("Error al leer el historial: " + e.getMessage());
+       }
+       return historial;
+   }
 }

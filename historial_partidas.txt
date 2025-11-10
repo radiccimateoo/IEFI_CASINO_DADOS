@@ -1,2 +1,6 @@
 PARTIDA #1 - Jugadores: Lucas, Casino, Marcos, Emilia | Ganador: Lucas (VIP) | Rondas ganadas: 2 de 2
 PARTIDA #2 - Jugadores: Lucas, Casino, Marcos, Emilia | Ganador: Lucas (VIP) | Rondas ganadas: 1 de 2
+PARTIDA #1 - Ganador: AAAAA | Rondas: 0 de 2
+PARTIDA #2 - Ganador: AAAAA | Rondas: 0 de 2
+PARTIDA #1 - Ganador: Casino | Rondas: 0 de 2
+PARTIDA #2 - Ganador: Casino | Rondas: 0 de 2
