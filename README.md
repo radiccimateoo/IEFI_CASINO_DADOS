@@ -10,7 +10,7 @@ Si se sigue con la carga manual, luego de la carga de los jugadores debe configu
 cantidad de partidas y confirmar por ultimo la partida, una vez confirmada el juego estara listo para comenzar.
 
 Cuando se inicia el juego, en el medio de la ventana hay un boton que permite ir jugando cada una de las rondas en donde se va mostrando el ganador
-de cada una, si algun jugador fue confundido por la trampa, entre otras cosas, finalizado el juego muestra un reporte con el ranking de ganadores, estadísticas del juego y el historial de las partidas.
+de cada una, si algun jugador fue confundido por la trampa, entre otras cosas, finalizado el juego muestra un reporte con el ranking de los jugadores, estadísticas del juego y el historial de las partidas.
 
 Tambien ofrece un panel extra llamado "Ver" que permite ver historial de partidas, partidas guardadas y estadisticas generales
 
