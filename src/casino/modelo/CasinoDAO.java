@@ -67,6 +67,42 @@ public class CasinoDAO {
             System.err.println("Error al guardar el jugador " + jugador.getNombre() + ": " + e.getMessage());
         }
     }
+    
+    // ---- MÉTODO FALTANTE PARA GUARDAR LA PARTIDA (NO EXISTIA ANTES, NO LO PUSE) ----
+    public void guardarPartida(Jugador ganador, int rondas, int pozo) {
+        String sqlBusqueda = "SELECT id FROM jugadores WHERE nombre = ?";
+        String sqlInsert = "INSERT INTO partidas (fecha, ganador_id, rondas, pozo) VALUES (datetime('now', 'localtime'), ?, ?, ?)";
+
+        try (Connection conn = ConexionDB.getConnection()) {
+
+            // 1. Necesitamos el ID del ganador (por la FOREIGN KEY)
+            int ganadorId = -1;
+            try (PreparedStatement pstmtBusqueda = conn.prepareStatement(sqlBusqueda)) {
+                pstmtBusqueda.setString(1, ganador.getNombre());
+                ResultSet rs = pstmtBusqueda.executeQuery();
+                if (rs.next()) {
+                    ganadorId = rs.getInt("id");
+                }
+            }
+
+            // Si no encontramos al ganador, no podemos guardar la partida
+            if (ganadorId == -1) {
+                System.err.println("Error: No se pudo guardar la partida. ID del ganador no encontrado.");
+                return;
+            }
+
+            // 2. Ahora sí, insertamos la partida
+            try (PreparedStatement pstmtInsert = conn.prepareStatement(sqlInsert)) {
+                pstmtInsert.setInt(1, ganadorId);
+                pstmtInsert.setInt(2, rondas);
+                pstmtInsert.setInt(3, pozo);
+                pstmtInsert.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al guardar la partida: " + e.getMessage());
+        }
+    }
 
     public List<String> obtenerRankingJugadores() {
         List<String> ranking = new ArrayList<>();

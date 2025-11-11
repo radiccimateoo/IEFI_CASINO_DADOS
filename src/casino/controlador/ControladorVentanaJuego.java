@@ -303,7 +303,22 @@ public class ControladorVentanaJuego {
         // 3. 💾 REGISTRAR EN EL ARCHIVO (Llamada al método con la variable ya construida)
         casino.registrarPartidaEnHistorial(detalleHistorial);
 
-    //FIN CONSIGNA 4
+        //FIN CONSIGNA 4
+
+        // ---- GUARDAMOS LA PARTIDA ----
+
+        // 1. Guardamos/Actualizamos al jugador ganador en la BD.
+        //    Esto es VITAL para asegurar que el ID exista para la Foreign Key.
+        if (!(ganadorPartida instanceof JugadorCasino)) {
+            casinoDAO.guardarOActualizarJugador(ganadorPartida);
+        }
+
+        // 2. Guardamos la partida en la tabla 'partidas'.
+        //    Tu lógica no parece tener un "pozo total" de la partida, 
+        //    así que pasaré 0. Si tenés ese dato, reemplaza el 0.
+        casinoDAO.guardarPartida(ganadorPartida, rondasGanadas, 0);
+
+        // ---------------------------------------------
         
         // Mostramos un mensaje al usuario
         vistaJuego.agregarAlLog(String.format(">>> Fin de la Partida %d. Ganador: %s <<<", partidaActual, ganadorPartida.getNombre()));    
