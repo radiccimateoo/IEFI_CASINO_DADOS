@@ -1,3 +1,6 @@
+LINK DEL VIDEO --> 
+
+
 # IEFI_CASINO_DADOS
 
 La logica de juego es la misma con la diferencia que ahora se puede apreciar visualmente. 
