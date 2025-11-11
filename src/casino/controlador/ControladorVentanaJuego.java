@@ -293,6 +293,28 @@ public class ControladorVentanaJuego {
             SwingUtilities.invokeLater(() -> actualizarInfoPartidaUI(0));
         }
     }
+     
+     //APLICACION DE CONSIGNA 5 MAteo -  SITEMA DE PERTINENCIA - METODO restaurar 
+     public void restaurarJuegoCargado(PartidaGuardadaDTO estadoCargado) {
+        this.totalPartidas = estadoCargado.getTotalPartidas();
+        this.totalRondas = estadoCargado.getTotalRondas();
+        this.partidaActual = estadoCargado.getPartidaActual();
+        this.rondaActual = estadoCargado.getRondaActual();
+        casino.reiniciarEstadisticas(); 
+        this.juegoDados = new JuegoDados(casino);
+        reiniciarContadorRondasPartida(); 
+
+        SwingUtilities.invokeLater(() -> {
+            vistaJuego.limpiarLog();
+            vistaJuego.agregarAlLog(">>> Partida Cargada Correctamente. Continuando... <<<");
+            vistaJuego.prepararInterfazJugadores(casino.getJugadores());
+
+            actualizarInfoPartidaUI(0); 
+        });
+
+        vistaJuego.setVisible(true);
+    }
+
     
     private void finalizarJuego(String motivo) {
         JOptionPane.showMessageDialog(vistaJuego, "¡Juego Terminado! Motivo: " + motivo);

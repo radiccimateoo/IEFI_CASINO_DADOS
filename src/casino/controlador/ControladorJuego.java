@@ -190,10 +190,20 @@ public class ControladorJuego {
                 ControladorVentanaJuego controladorVentanaJuego = new ControladorVentanaJuego(casino, ventanaJuego, ventanaConfig);
 
                 // Accedemos a los campos públicos del DTO simplificado
-                controladorVentanaJuego.continuarJuegoCargado(
+
+                /*
+                restaurarJuegoCargado carga la partida exactamente donde quedó
+                continuarJuegoCargado ignora el progreso y empieza una partida nueva desde la Partida 1, Ronda 1
+                */
+               
+                //ESTA PARTE YA NO IRIA - MATEO
+                /*controladorVentanaJuego.continuarJuegoCargado(
                     partidaGuardada.getTotalPartidas(), 
                     partidaGuardada.getTotalRondas()   
-                );
+                );*/
+                
+                //aplicacion de la consigna 5
+                controladorVentanaJuego.restaurarJuegoCargado(partidaGuardada);
                 actualizarListaJugadores();
 
             } catch (IOException | NumberFormatException ex) {
