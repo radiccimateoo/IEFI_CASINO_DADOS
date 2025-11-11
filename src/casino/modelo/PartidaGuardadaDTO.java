@@ -20,4 +20,14 @@ public class PartidaGuardadaDTO {
     public ArrayList<Jugador> getJugadores() {
         return jugadores;
     }
+
+    //agregamos nuevos metodos para obtener partida actual y ronda actual
+    public int getPartidaActual() {
+        return partidaActual;
+    }
+
+    public int getRondaActual() {
+        return rondaActual;
+    }
 }
+
