@@ -202,7 +202,7 @@ public class ControladorJuego {
                     partidaGuardada.getTotalRondas()   
                 );*/
                 
-                //aplicacion de la consigna 5
+                //aplicacion de la consigna 5 - Mateo
                 controladorVentanaJuego.restaurarJuegoCargado(partidaGuardada);
                 actualizarListaJugadores();
 
