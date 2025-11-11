@@ -28,8 +28,10 @@ import java.util.stream.Collectors;
     // Implementación del método abstracto para calcular la apuesta
         @Override   
         public int calcularApuesta() {
-        return 0;
-    }
+             int apuesta = (int)(getDinero() * 0.10);
+             return Math.max(apuesta, 1);
+
+        }
         
     //Habilidad especial: dados cargados (40% probabilidad de sacar 6 en cada dado)
     public int tirarDadoCargado() {

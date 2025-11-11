@@ -180,25 +180,23 @@ public class ControladorJuego {
                 
         /* ============= CARGAR PARTIDA  =============*/
         ventanaConfig.getBtnCargarPartida().addActionListener(e -> {
-           try {
-                casino.modelo.PartidaGuardadaDTO partidaGuardada = casino.cargarPartida();
+            try {
+                 PartidaGuardadaDTO partidaGuardada = casino.cargarPartida();
 
-                JOptionPane.showMessageDialog(ventanaConfig, "Partida cargada exitosamente.");
+                 JOptionPane.showMessageDialog(ventanaConfig, "Partida cargada exitosamente.");
 
-                ventanaConfig.setVisible(false);
-                VentanaJuego ventanaJuego = new VentanaJuego();
-                ControladorVentanaJuego controladorVentanaJuego = new ControladorVentanaJuego(casino, ventanaJuego, ventanaConfig);
+                 ventanaConfig.setVisible(false);
+                 VentanaJuego ventanaJuego = new VentanaJuego();
+                 ControladorVentanaJuego controladorVentanaJuego = new ControladorVentanaJuego(casino, ventanaJuego, ventanaConfig);
 
-                // Accedemos a los campos públicos del DTO simplificado
-                controladorVentanaJuego.continuarJuegoCargado(
-                    partidaGuardada.getTotalPartidas(), 
-                    partidaGuardada.getTotalRondas()   
-                );
-                actualizarListaJugadores();
+                 // Llamamos al método CORRECTO que restaura todo el estado
+                 controladorVentanaJuego.restaurarJuegoCargado(partidaGuardada);
 
-            } catch (IOException | NumberFormatException ex) {
-                JOptionPane.showMessageDialog(ventanaConfig, "Error al cargar la partida: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
-            }
+                 actualizarListaJugadores();
+
+             } catch (IOException | NumberFormatException ex) {
+                 JOptionPane.showMessageDialog(ventanaConfig, "Error al cargar la partida: " + ex.getMessage(), "Error de Carga", JOptionPane.ERROR_MESSAGE);
+             }
         });
         
         /* ============= SALIR  =============*/

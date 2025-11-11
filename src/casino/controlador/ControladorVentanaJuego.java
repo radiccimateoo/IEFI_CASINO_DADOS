@@ -16,7 +16,7 @@ import casino.vista.VentanaConfiguracion;
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.util.Comparator;
-import casino.modelo.Reporte; //C4
+//import casino.modelo.Reporte; //C4
 import casino.vista.VentanaReporteFinal;//C4
 import casino.modelo.PartidaGuardadaDTO; //CONSIGNA 5
 
@@ -48,6 +48,8 @@ public class ControladorVentanaJuego {
         // Inicializamos el mapa para contar las rondas ganadas
         this.rondasGanadasEnPartida = new HashMap<>();
         configurarEventos();
+        this.historialDeJuego = new ArrayList<>();
+
     }
     
     // Método para iniciar el juego con los parámetros de configuración
@@ -88,7 +90,8 @@ public class ControladorVentanaJuego {
         this.partidaActual = 1;
         this.rondaActual = 1;
 
-        casino.reiniciarEstadisticas(); // Las estadísticas de juego (mayor apuesta, etc.) se reinician.
+        casino.reiniciarEstadisticas(); 
+        casino.reiniciarVictoriasJugadores(); 
 
         this.juegoDados = new JuegoDados(casino); 
 
@@ -119,41 +122,21 @@ public class ControladorVentanaJuego {
         
         // --- Evento del Menú "Ranking Actual" ---
         vistaJuego.getMenuItemRanking().addActionListener(e -> {
-            List<String> rankingDesdeBD = casinoDAO.obtenerRankingJugadores(); // obtenemos ranking jugadores desde BD - C6
-            StringBuilder rankingMsg = new StringBuilder("--- RANKING ACTUAL ---\n\n");
-            
+            List<String> rankingDesdeBD = casinoDAO.obtenerRankingJugadores();
+            StringBuilder rankingMsg = new StringBuilder("--- RANKING HISTÓRICO (BD) ---\n\n");
+
             if (rankingDesdeBD.isEmpty()) {
-                rankingMsg.append("Aún no hay jugadores guardados en la base de datos.\n");
-                rankingMsg.append("Finaliza una partida para que los jugadores se guarden.");
+                rankingMsg.append("Aún no hay jugadores guardados en la base de datos.");
             } else {
                 for (String linea : rankingDesdeBD) {
                     rankingMsg.append(linea).append("\n");
                 }
             }
-            
-            javax.swing.JTextArea textArea = new javax.swing.JTextArea(rankingMsg.toString());
-            textArea.setEditable(false); 
+
+            javax.swing.JTextArea textArea = new javax.swing.JTextArea(rankingMsg.toString(), 15, 50);
+            textArea.setEditable(false);
             javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(textArea);
-            scrollPane.setPreferredSize(new java.awt.Dimension(450, 250)); 
-            JOptionPane.showMessageDialog(
-                vistaJuego, 
-                scrollPane, 
-                "Ranking Histórico", 
-                JOptionPane.INFORMATION_MESSAGE
-            );
-           
-            //---------------------- ESTO SUPUESTAMENTE NO VA MAS -----------------------------
-            ArrayList<Jugador> jugadoresOrdenados = new ArrayList<>(casino.getJugadores());
-            jugadoresOrdenados.sort(Comparator.comparingInt(Jugador::getDinero).reversed());
-            
-            int pos = 1;
-            for (Jugador j : jugadoresOrdenados) {
-                rankingMsg.append(pos).append(". ").append(j.getNombreConTipo()).append(" - $").append(j.getDinero()).append("\n");
-                pos++;
-            }
-            JOptionPane.showMessageDialog(vistaJuego, rankingMsg.toString(), "Ranking Actual", JOptionPane.INFORMATION_MESSAGE);
-            
-            //---------------------------------------------------------------------------------
+            JOptionPane.showMessageDialog(vistaJuego, scrollPane, "Ranking Histórico", JOptionPane.INFORMATION_MESSAGE);
         });
         
         // --- Evento del Menú "Historial de Partidas" ---
@@ -294,7 +277,7 @@ public class ControladorVentanaJuego {
 
         // 2. 🟨 CONSTRUIR LA CADENA DE DETALLE (Variable 'detalle')
         // Formato: "PARTIDA #N - Ganador: Nombre | Rondas: X de Y"
-        String detalleHistorial = String.format("PARTIDA #%d - Ganador: %s | Rondas: %d de %d", 
+        /*String detalleHistorial = String.format("PARTIDA #%d - Ganador: %s | Rondas: %d de %d", 
                                               partidaActual, 
                                               ganadorPartida.getNombre(), // O el método que devuelve el nombre y tipo si es necesario
                                               rondasGanadas, 
@@ -304,6 +287,7 @@ public class ControladorVentanaJuego {
         casino.registrarPartidaEnHistorial(detalleHistorial);
 
         //FIN CONSIGNA 4
+        */
 
         // ---- GUARDAMOS LA PARTIDA ----
 
@@ -341,50 +325,41 @@ public class ControladorVentanaJuego {
     }
     
     private void finalizarJuego(String motivo) {
-        JOptionPane.showMessageDialog(vistaJuego, "¡Juego Terminado! Motivo: " + motivo);
-        
-        //CONSIGNA 4
-        mostrarReporteFinal();
-        //FIN
-        
-        // Deshabilitamos los controles del juego
+        // 1. Deshabilitar controles
         vistaJuego.getBtnAvanzar().setEnabled(false);
         vistaJuego.getMenuItemPausar().setEnabled(false);
         vistaJuego.getMenuItemGuardar().setEnabled(false);
-        
-        //guardamos o actualizamos los jugadores - C6 BD - MATEO
+
+        // 2. Guardar el estado final de los jugadores en la base de datos
         for (Jugador jugador : casino.getJugadores()) {
-            // No guardamos al "Casino" en el ranking persistente
             if (!(jugador instanceof JugadorCasino)) {
                 casinoDAO.guardarOActualizarJugador(jugador);
             }
         }
-        
-        // Generamos y guardamos los reportes finales, como se hacía antes
-        // El total de partidas jugadas puede ser menor si alguien quebró.
-        int partidasJugadas = (partidaActual > totalPartidas) ? totalPartidas : partidaActual -1;
-         if (partidasJugadas < 1) partidasJugadas = 1;
-        //Reporte.generarReporteFinal(casino, partidasJugadas);
-        
-        casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual);         
-        System.out.println("Reporte final generado. Cierra esta ventana para volver a configurar.");
-        
-        Object[] options = {"Volver al Menú Principal"};
-        int result = JOptionPane.showOptionDialog(vistaJuego,
-                "¡Juego Terminado! Motivo: " + motivo + "\nEl reporte final ha sido generado en la consola.",
-                "Fin del Juego",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]);
 
-        if (result == 0 || result == JOptionPane.CLOSED_OPTION) {
-             vistaJuego.dispose(); // Cierra la ventana de juego
-             vistaConfig.setVisible(true); // Muestra de nuevo la ventana de configuración
-        }
-    }
-    
+        // 3. Mensaje de fin de juego
+        JOptionPane.showMessageDialog(vistaJuego,
+            "¡Juego Terminado! Motivo: " + motivo + "\nA continuación se mostrará el reporte final.",
+            "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
+
+        // 4. Cierra la ventana de juego
+        vistaJuego.dispose();
+
+        // 5. OBTIENE EL HISTORIAL CORRECTO DESDE LA BASE DE DATOS
+        List<String> historialDesdeBD = casinoDAO.obtenerHistorialUltimasPartidas();
+
+        // 6. Crea y muestra la ventana de reporte (asumiendo que es un JFrame)
+        VentanaReporteFinal reporteFrame = new VentanaReporteFinal();
+
+        // 7. Le pasamos los datos correctos para que se pueble
+        reporteFrame.poblarDatos(casino, historialDesdeBD);
+
+        reporteFrame.setLocationRelativeTo(null);
+        reporteFrame.setVisible(true);
+
+        // 8. Muestra la ventana de configuración
+        vistaConfig.setVisible(true);
+    }    
     /*creamos el metodo para manejar correctamente los datos del DTO
      y continuar la partida dedsde el punto exacto donde se guardó */
     public void restaurarJuegoCargado(PartidaGuardadaDTO estadoCargado) {
@@ -431,48 +406,4 @@ public class ControladorVentanaJuego {
         // En caso de empate, se puede mejorar la lógica, pero por ahora devuelve el primero que encuentre.
         return (ganador != null) ? ganador : casino.getJugadores().get(0);
     }
-  
-    //CONSIGNA 4 
-    private void mostrarReporteFinal() {
-    // 1. Instanciar la Vista de Reporte
-    VentanaReporteFinal vistaReporte = new VentanaReporteFinal();
-
-    // 2. 🟪 CREAR EL REPORTE Y OBTENER LA INFORMACIÓN 
-    // Se le pasa la instancia del Casino que tiene el controlador
-    Reporte reporte = new Reporte(casino); 
-    
-    // 3. OBTENER DATOS DE ESTADÍSTICAS
-    String mayorApuestaInfo = reporte.getMayorApuestaInfo();
-    String mejorPuntajeInfo = reporte.getMejorPuntajeInfo();
-    String afectadosInfo = reporte.getJugadoresAfectadosInfo();
-    
-    // 4. ACTUALIZAR LA VISTA con las Estadísticas
-    vistaReporte.mostrarEstadisticas(
-        mayorApuestaInfo, 
-        mejorPuntajeInfo, 
-        afectadosInfo
-    );
-
-    // 5. OBTENER y mostrar el Ranking (Lógica anterior)
-    List<Jugador> ranking = reporte.getRankingJugadores(); 
-    vistaReporte.mostrarRanking(ranking); 
-    
-    //// 🟨 NUEVO: OBTENER y mostrar el Historial
-    String historial = reporte.getHistorialUltimasTresPartidas();
-    vistaReporte.mostrarHistorial(historial);
-    
-    // 6. Mostrar la Ventana
-    vistaReporte.setVisible(true);
-    vistaJuego.dispose();
-}
-    //private void actualizarInfoPartidaUI(){
-        // ESTE MÉTODO SERÁ CLAVE. Llenará los JLabels de la ventana de juego.
-        // Por ahora, solo imprime en consola para demostrar el flujo.
-    //    String info = String.format("Partida: %d/%d | Ronda: %d/%d", 
-    //                                partidaActual, totalPartidas, 
-    //                                rondaActual, totalRondas);
-        
-    //    vistaJuego.setTitle("Casino - " + info); // Actualizamos el título de la ventana
-    //    System.out.println("UI actualizada: " + info);
-    //}
 }
