@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class AppCasino {
 
     public static void main(String[] args) {
-
+    /*
         // Inicializar el modelo
         Casino casino = new Casino(); // clase que gestiona los jugadores y estadísticas
 
@@ -31,5 +31,15 @@ public class AppCasino {
 
         // Mostrar la ventana de configuración
         ventanaConfig.setVisible(true);
+        
+        
+        TODO CON BASE DE DATOS AHORA - BONUS - MATEO
+    */
+    
+    CasinoDAO casinoDAO = new CasinoDAO();
+    casinoDAO.crearTablasSiNoExisten();
+    Casino casino = new Casino();         VentanaConfiguracion ventanaConfig = new VentanaConfiguracion();
+    ControladorJuego controlador = new ControladorJuego(casino, ventanaConfig);
+    ventanaConfig.setVisible(true);
     }
 }
