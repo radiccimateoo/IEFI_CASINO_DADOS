@@ -1,8 +1,11 @@
 package casino.controlador;
 
 import casino.modelo.Casino;
+//importamos casinoDAO
+import casino.modelo.CasinoDAO;
 import casino.modelo.JuegoDados;
 import casino.modelo.Jugador;
+import casino.modelo.JugadorCasino;
 //import casino.modelo.Reporte; 
 import casino.vista.VentanaJuego;
 import casino.vista.VentanaPausa;
@@ -15,9 +18,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import casino.modelo.Reporte; //C4
 import casino.vista.VentanaReporteFinal;//C4
+import casino.modelo.PartidaGuardadaDTO; //CONSIGNA 5
 
 
 public class ControladorVentanaJuego {
+    private CasinoDAO casinoDAO; // para usar - C5
     private Casino casino;
     private VentanaJuego vistaJuego;
     private VentanaPausa vistaPausa;
@@ -34,6 +39,7 @@ public class ControladorVentanaJuego {
 
     
     public ControladorVentanaJuego(Casino casino, VentanaJuego vistaJuego, VentanaConfiguracion vistaConfig) {
+        this.casinoDAO = new CasinoDAO(); //instanciamos la clase - C5 - MATEO    
         this.casino = casino;
         this.vistaJuego = vistaJuego;
         this.vistaConfig = vistaConfig; 
@@ -99,7 +105,7 @@ public class ControladorVentanaJuego {
         /* ============= MENU PARTIDA  =============*/
         vistaJuego.getMenuItemPausar().addActionListener(e -> pausarJuego());
         vistaJuego.getMenuItemGuardar().addActionListener(e -> {
-            casino.guardarPartida(this.totalPartidas, this.totalRondas);
+            casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual); // C5 -MATEO
             JOptionPane.showMessageDialog(vistaJuego, "Partida guardada correctamente.");
         });
         //vistaJuego.getMenuItemSalir().addActionListener(e -> System.exit(0));
@@ -107,13 +113,36 @@ public class ControladorVentanaJuego {
         /* ============= MENU PAUSA  =============*/
         vistaPausa.getBtnVolver().addActionListener(e -> vistaPausa.dispose()); // Simplemente cierra el diálogo
         vistaPausa.getBtnGuardarPausa().addActionListener(e -> {
-            casino.guardarPartida(this.totalPartidas, this.totalRondas);
+            casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual); // C5 -MATEO
             JOptionPane.showMessageDialog(vistaPausa, "Partida guardada.");
         });
         
         // --- Evento del Menú "Ranking Actual" ---
         vistaJuego.getMenuItemRanking().addActionListener(e -> {
+            List<String> rankingDesdeBD = casinoDAO.obtenerRankingJugadores(); // obtenemos ranking jugadores desde BD - C6
             StringBuilder rankingMsg = new StringBuilder("--- RANKING ACTUAL ---\n\n");
+            
+            if (rankingDesdeBD.isEmpty()) {
+                rankingMsg.append("Aún no hay jugadores guardados en la base de datos.\n");
+                rankingMsg.append("Finaliza una partida para que los jugadores se guarden.");
+            } else {
+                for (String linea : rankingDesdeBD) {
+                    rankingMsg.append(linea).append("\n");
+                }
+            }
+            
+            javax.swing.JTextArea textArea = new javax.swing.JTextArea(rankingMsg.toString());
+            textArea.setEditable(false); 
+            javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(textArea);
+            scrollPane.setPreferredSize(new java.awt.Dimension(450, 250)); 
+            JOptionPane.showMessageDialog(
+                vistaJuego, 
+                scrollPane, 
+                "Ranking Histórico", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
+           
+            //---------------------- ESTO SUPUESTAMENTE NO VA MAS -----------------------------
             ArrayList<Jugador> jugadoresOrdenados = new ArrayList<>(casino.getJugadores());
             jugadoresOrdenados.sort(Comparator.comparingInt(Jugador::getDinero).reversed());
             
@@ -123,6 +152,8 @@ public class ControladorVentanaJuego {
                 pos++;
             }
             JOptionPane.showMessageDialog(vistaJuego, rankingMsg.toString(), "Ranking Actual", JOptionPane.INFORMATION_MESSAGE);
+            
+            //---------------------------------------------------------------------------------
         });
         
         // --- Evento del Menú "Historial de Partidas" ---
@@ -272,7 +303,22 @@ public class ControladorVentanaJuego {
         // 3. 💾 REGISTRAR EN EL ARCHIVO (Llamada al método con la variable ya construida)
         casino.registrarPartidaEnHistorial(detalleHistorial);
 
-    //FIN CONSIGNA 4
+        //FIN CONSIGNA 4
+
+        // ---- GUARDAMOS LA PARTIDA ----
+
+        // 1. Guardamos/Actualizamos al jugador ganador en la BD.
+        //    Esto es VITAL para asegurar que el ID exista para la Foreign Key.
+        if (!(ganadorPartida instanceof JugadorCasino)) {
+            casinoDAO.guardarOActualizarJugador(ganadorPartida);
+        }
+
+        // 2. Guardamos la partida en la tabla 'partidas'.
+        //    Tu lógica no parece tener un "pozo total" de la partida, 
+        //    así que pasaré 0. Si tenés ese dato, reemplaza el 0.
+        casinoDAO.guardarPartida(ganadorPartida, rondasGanadas, 0);
+
+        // ---------------------------------------------
         
         // Mostramos un mensaje al usuario
         vistaJuego.agregarAlLog(String.format(">>> Fin de la Partida %d. Ganador: %s <<<", partidaActual, ganadorPartida.getNombre()));    
@@ -306,13 +352,21 @@ public class ControladorVentanaJuego {
         vistaJuego.getMenuItemPausar().setEnabled(false);
         vistaJuego.getMenuItemGuardar().setEnabled(false);
         
+        //guardamos o actualizamos los jugadores - C6 BD - MATEO
+        for (Jugador jugador : casino.getJugadores()) {
+            // No guardamos al "Casino" en el ranking persistente
+            if (!(jugador instanceof JugadorCasino)) {
+                casinoDAO.guardarOActualizarJugador(jugador);
+            }
+        }
+        
         // Generamos y guardamos los reportes finales, como se hacía antes
         // El total de partidas jugadas puede ser menor si alguien quebró.
         int partidasJugadas = (partidaActual > totalPartidas) ? totalPartidas : partidaActual -1;
          if (partidasJugadas < 1) partidasJugadas = 1;
         //Reporte.generarReporteFinal(casino, partidasJugadas);
         
-        casino.guardarPartida(this.totalPartidas, this.totalRondas);         
+        casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual);         
         System.out.println("Reporte final generado. Cierra esta ventana para volver a configurar.");
         
         Object[] options = {"Volver al Menú Principal"};
@@ -329,6 +383,28 @@ public class ControladorVentanaJuego {
              vistaJuego.dispose(); // Cierra la ventana de juego
              vistaConfig.setVisible(true); // Muestra de nuevo la ventana de configuración
         }
+    }
+    
+    /*creamos el metodo para manejar correctamente los datos del DTO
+     y continuar la partida dedsde el punto exacto donde se guardó */
+    public void restaurarJuegoCargado(PartidaGuardadaDTO estadoCargado) {
+        this.totalPartidas = estadoCargado.getTotalPartidas();
+        this.totalRondas = estadoCargado.getTotalRondas();
+        this.partidaActual = estadoCargado.getPartidaActual();
+        this.rondaActual = estadoCargado.getRondaActual();
+        casino.reiniciarEstadisticas(); 
+        this.juegoDados = new JuegoDados(casino);
+        reiniciarContadorRondasPartida(); 
+
+        SwingUtilities.invokeLater(() -> {
+            vistaJuego.limpiarLog();
+            vistaJuego.agregarAlLog(">>> Partida Cargada Correctamente. Continuando... <<<");
+            vistaJuego.prepararInterfazJugadores(casino.getJugadores());
+
+            actualizarInfoPartidaUI(0); 
+        });
+
+        vistaJuego.setVisible(true);
     }
     
     private void pausarJuego() {
