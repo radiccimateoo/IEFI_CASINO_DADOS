@@ -1,5 +1,4 @@
 package casino.modelo;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 
 public class Casino {
     
@@ -99,16 +97,20 @@ public class Casino {
            String[] datosConfig = lineaConfig.split(",");
            int totalPartidas = Integer.parseInt(datosConfig[1]);
            int totalRondas = Integer.parseInt(datosConfig[2]);
+           // consigna 5 - mateo agregamos los datos
+           int partidaActual = Integer.parseInt(datosConfig[3]);           
+           int rondaActual = Integer.parseInt(datosConfig[4]);
 
             // Leemos las líneas de los jugadores
             String lineaJugador;
             while ((lineaJugador = reader.readLine()) != null) {
                 String[] datos = lineaJugador.split(",");    
-                if (datos.length == 4) {
+                if (datos.length == 5) {
                     String nombre = datos[0];
                     String apodo = datos[1];
                     String tipo = datos[2];
                     int dinero = Integer.parseInt(datos[3]);
+                    int victorias = Integer.parseInt(datos[4]); // <-- NUEVO
 
                     Jugador jugadorCargado = crearJugadorDesdeTipo(nombre, apodo, tipo);
                     if (jugadorCargado != null) {
@@ -121,7 +123,7 @@ public class Casino {
                 throw new IOException("No se cargó ningún jugador. Verifique el archivo.");
             }
             // Devolvemos un DTO (Data Transfer Object) con toda la información
-            return new casino.modelo.PartidaGuardadaDTO(totalPartidas, totalRondas, this.jugadores);
+            return new casino.modelo.PartidaGuardadaDTO(totalPartidas, totalRondas, partidaActual, rondaActual, this.jugadores);
 
         } catch (FileNotFoundException e) {
             // Re-lanzamos la excepción para que el controlador la maneje

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import casino.modelo.Reporte; //C4
 import casino.vista.VentanaReporteFinal;//C4
+import casino.modelo.PartidaGuardadaDTO; //CONSIGNA 5
 
 
 public class ControladorVentanaJuego {
@@ -329,6 +330,28 @@ public class ControladorVentanaJuego {
              vistaJuego.dispose(); // Cierra la ventana de juego
              vistaConfig.setVisible(true); // Muestra de nuevo la ventana de configuración
         }
+    }
+    
+    /*creamos el metodo para manejar correctamente los datos del DTO
+     y continuar la partida dedsde el punto exacto donde se guardó */
+    public void restaurarJuegoCargado(PartidaGuardadaDTO estadoCargado) {
+        this.totalPartidas = estadoCargado.getTotalPartidas();
+        this.totalRondas = estadoCargado.getTotalRondas();
+        this.partidaActual = estadoCargado.getPartidaActual();
+        this.rondaActual = estadoCargado.getRondaActual();
+        casino.reiniciarEstadisticas(); 
+        this.juegoDados = new JuegoDados(casino);
+        reiniciarContadorRondasPartida(); 
+
+        SwingUtilities.invokeLater(() -> {
+            vistaJuego.limpiarLog();
+            vistaJuego.agregarAlLog(">>> Partida Cargada Correctamente. Continuando... <<<");
+            vistaJuego.prepararInterfazJugadores(casino.getJugadores());
+
+            actualizarInfoPartidaUI(0); 
+        });
+
+        vistaJuego.setVisible(true);
     }
     
     private void pausarJuego() {
