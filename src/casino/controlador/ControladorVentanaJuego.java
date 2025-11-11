@@ -100,7 +100,7 @@ public class ControladorVentanaJuego {
         /* ============= MENU PARTIDA  =============*/
         vistaJuego.getMenuItemPausar().addActionListener(e -> pausarJuego());
         vistaJuego.getMenuItemGuardar().addActionListener(e -> {
-            casino.guardarPartida(this.totalPartidas, this.totalRondas);
+            casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual); // C5 -MATEO
             JOptionPane.showMessageDialog(vistaJuego, "Partida guardada correctamente.");
         });
         //vistaJuego.getMenuItemSalir().addActionListener(e -> System.exit(0));
@@ -108,7 +108,7 @@ public class ControladorVentanaJuego {
         /* ============= MENU PAUSA  =============*/
         vistaPausa.getBtnVolver().addActionListener(e -> vistaPausa.dispose()); // Simplemente cierra el diálogo
         vistaPausa.getBtnGuardarPausa().addActionListener(e -> {
-            casino.guardarPartida(this.totalPartidas, this.totalRondas);
+            casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual); // C5 -MATEO
             JOptionPane.showMessageDialog(vistaPausa, "Partida guardada.");
         });
         
@@ -313,7 +313,7 @@ public class ControladorVentanaJuego {
          if (partidasJugadas < 1) partidasJugadas = 1;
         //Reporte.generarReporteFinal(casino, partidasJugadas);
         
-        casino.guardarPartida(this.totalPartidas, this.totalRondas);         
+        casino.guardarPartida(this.totalPartidas, this.totalRondas, this.partidaActual, this.rondaActual);         
         System.out.println("Reporte final generado. Cierra esta ventana para volver a configurar.");
         
         Object[] options = {"Volver al Menú Principal"};

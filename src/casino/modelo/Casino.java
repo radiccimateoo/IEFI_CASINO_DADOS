@@ -55,10 +55,10 @@ public class Casino {
         }
     }
      
-    public void guardarPartida(int totalPartidas, int totalRondas) {
+     //agregamos los nuevos datos al archivo - consigna 5
+    public void guardarPartida(int totalPartidas, int totalRondas, int partidaActual, int rondaActual) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_GUARDADO))) {
-            // Escribimos una cabecera para que el archivo sea más legible
-            writer.write(String.format("config,%d,%d", totalPartidas, totalRondas));
+            writer.write(String.format("config,%d,%d,%d,%d", totalPartidas, totalRondas, partidaActual, rondaActual));
             writer.newLine();
             
             for (Jugador j : this.jugadores) {
@@ -66,16 +66,15 @@ public class Casino {
                         j.getNombre(),
                         j.getApodo(),
                         j.obtenerTipoJugador(),
-                        String.valueOf(j.getDinero())
+                        String.valueOf(j.getDinero()),
+                        String.valueOf(j.getPartidasGanadas()) 
                 );
                 writer.write(linea);
                 writer.newLine();
             }
-            System.out.println("Partida guardada correctamente en " + ARCHIVO_GUARDADO);
         } catch (IOException e) {
-            System.err.println("Error al guardar la partida: " + e.getMessage());
         }
-    }   
+    }     
     /**
      * Carga el estado del juego desde el archivo.
      * @return Un objeto PartidaGuardadaDTO con los datos cargados.
