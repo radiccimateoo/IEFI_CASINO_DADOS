@@ -46,13 +46,8 @@ public class Casino {
         this.mejorPuntajeDados = 0;
         this.nombreJugadorMejorPuntaje = "Sin registro";
         this.conteoDadosCargados = 0;
-        this.victimasDeTrampas.clear(); // Limpia el mapa de víctimas
+        this.victimasDeTrampas.clear();
         this.cantPartidasTotal = 0;
-        
-        // También reiniciamos las victorias de cada jugador
-        for (Jugador j : jugadores) {
-            j.resetearVictorias(); 
-        }
     }
      
      //agregamos los nuevos datos al archivo - consigna 5
@@ -114,6 +109,10 @@ public class Casino {
                     Jugador jugadorCargado = crearJugadorDesdeTipo(nombre, apodo, tipo);
                     if (jugadorCargado != null) {
                         jugadorCargado.setDinero(dinero);
+                        // Asignamos las victorias leídas del archivo
+                        for (int i = 0; i < victorias; i++) {
+                            jugadorCargado.sumarVictoria();
+                        }
                         this.jugadores.add(jugadorCargado);
                     }
                 }
@@ -237,6 +236,7 @@ public class Casino {
     }
     
     
+    /*
     public List<String> jugar(int cantPartidas, int cantRondas) {
         List<String> detalles = new ArrayList<>();
 
@@ -304,9 +304,11 @@ public class Casino {
 
         return detalles;
     }
+    */
    
     
     public int getCantPartidas() { return this.cantPartidasTotal; }
+    /*
     public class PartidaGuardadaDTO {
         private final int totalPartidas;
         private final int totalRondas;
@@ -330,6 +332,7 @@ public class Casino {
             return jugadores;
         }
     }
+    */
     
     //CONSIGNA 4
     // Getter necesario para que Reporte pueda obtener el total
@@ -342,6 +345,7 @@ public class Casino {
     //CONSIGNA 4
     //Escribe el detalle de una partida en el archivo de historial.     
     
+    /*
     public void registrarPartidaEnHistorial(String detalle) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_HISTORIAL, true))) {
             // El 'true' en FileWriter indica que se debe anexar (append) al archivo
@@ -352,12 +356,13 @@ public class Casino {
             // Manejo de error simple, se puede mejorar
         }
     }
+    */
     
     /**
     * Lee todo el historial de partidas del archivo.
     * @return Una lista de Strings con el historial completo.
     */
-   public List<String> leerHistorialCompleto() {
+   /*public List<String> leerHistorialCompleto() {
        List<String> historial = new ArrayList<>();
        try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_HISTORIAL))) {
            String linea;
@@ -371,5 +376,12 @@ public class Casino {
            System.err.println("Error al leer el historial: " + e.getMessage());
        }
        return historial;
-   }
+    }  
+    */
+    
+    public void reiniciarVictoriasJugadores() {
+    for (Jugador j : jugadores) {
+        j.resetearVictorias(); 
+    }
+}
 }

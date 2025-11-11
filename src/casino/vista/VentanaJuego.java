@@ -497,11 +497,6 @@ public class VentanaJuego extends javax.swing.JFrame {
         btnAvanzar.setForeground(new java.awt.Color(255, 255, 255));
         btnAvanzar.setText("Lanzar Dados / Siguiente Ronda");
         btnAvanzar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnAvanzar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAvanzarActionPerformed(evt);
-            }
-        });
 
         txtLogEventos.setEditable(false);
         txtLogEventos.setColumns(20);
@@ -570,10 +565,6 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnAvanzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvanzarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAvanzarActionPerformed
 
     private void menuItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSalirActionPerformed
         // TODO add your handling code here:

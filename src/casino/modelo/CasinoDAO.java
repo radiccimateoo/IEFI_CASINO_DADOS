@@ -129,4 +129,40 @@ public class CasinoDAO {
         }
         return ranking;
     }
+    
+    public List<String> obtenerHistorialUltimasPartidas() {
+        List<String> historial = new ArrayList<>();
+        // Esta consulta SQL es más compleja:
+        // 1. Selecciona los campos necesarios de ambas tablas.
+        // 2. Une 'partidas' con 'jugadores' usando el ID del ganador.
+        // 3. Ordena por el ID de la partida en orden descendente para obtener las más nuevas primero.
+        // 4. Limita el resultado a solo 3 filas.
+        String sql = "SELECT p.id, j.nombre AS ganador, p.rondas "
+                   + "FROM partidas p "
+                   + "JOIN jugadores j ON p.ganador_id = j.id "
+                   + "ORDER BY p.id DESC "
+                   + "LIMIT 3;";
+
+        try (Connection conn = ConexionDB.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                // Formateamos la salida para que coincida con el requisito
+                // "PARTIDA #3 - Ganador: Casino | Rondas: 2 de 3"
+                // Nota: No tenemos el total de rondas en la BD, así que lo omitimos o lo adaptamos.
+                String linea = String.format("PARTIDA BD #%d - Ganador: %s | Rondas ganadas: %d",
+                        rs.getInt("id"),
+                        rs.getString("ganador"),
+                        rs.getInt("rondas"));
+                historial.add(0, linea); // Añadimos al principio para mantener el orden cronológico
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el historial de partidas: " + e.getMessage());
+        }
+        return historial;
+    }
 }
+
+

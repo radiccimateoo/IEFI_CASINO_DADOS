@@ -4,7 +4,10 @@
  */
 package casino.vista;
 
+import casino.modelo.Casino;
 import casino.modelo.Jugador;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -18,6 +21,8 @@ public class VentanaReporteFinal extends javax.swing.JFrame {
      */
     public VentanaReporteFinal() {
         initComponents();
+        btnCerrar.addActionListener(e -> this.dispose());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     //CONSIGNA 4 - TABLA
@@ -73,6 +78,45 @@ public void mostrarHistorial(String historial) {
     // Si no es visible, puedes agregar un getter (public JTextArea getTxtHistorial())
     // o modificar el método initComponents().
     txtHistorial.setText(historial); 
+}
+
+public void poblarDatos(Casino casino, List<String> historial) {
+    // ---- 1. Llenar la tabla de Ranking ----
+    DefaultTableModel model = (DefaultTableModel) tblRanking.getModel();
+    model.setRowCount(0); // Limpiar la tabla por si acaso
+
+    ArrayList<Jugador> jugadoresOrdenados = new ArrayList<>(casino.getJugadores());
+    jugadoresOrdenados.sort(Comparator.comparingInt(Jugador::getDinero).reversed());
+
+    for (Jugador j : jugadoresOrdenados) {
+        model.addRow(new Object[]{
+            j.getNombre(),
+            j.obtenerTipoJugador(),
+            "$" + j.getDinero(),
+            j.getPartidasGanadas()
+        });
+    }
+
+    // ---- 2. Llenar las estadísticas generales ----
+    lblMayorApuesta.setText("$" + casino.getMayorApuesta() + " por " + casino.getNombreJugadorMayorApuesta());
+    lblMejorPuntaje.setText(casino.getMejorPuntajeDados() + " por " + casino.getNombreJugadorMejorPuntaje());
+
+    if (casino.getVictimasDeTrampas().isEmpty()) {
+        lblJugadoresAfectados.setText("Ninguno");
+    } else {
+        StringBuilder afectados = new StringBuilder();
+        casino.getVictimasDeTrampas().forEach((nombre, cantidad) -> 
+            afectados.append(nombre).append(" (").append(cantidad).append(" veces), "));
+        lblJugadoresAfectados.setText(afectados.substring(0, afectados.length() - 2));
+    }
+
+    // ---- 3. Llenar el historial de partidas ----
+    StringBuilder historialTexto = new StringBuilder();
+    int inicio = Math.max(0, historial.size() - 3);
+    for (int i = inicio; i < historial.size(); i++) {
+        historialTexto.append(historial.get(i)).append("\n");
+    }
+    txtHistorial.setText(historialTexto.toString());
 }
     /**
      * This method is called from within the constructor to initialize the form.
