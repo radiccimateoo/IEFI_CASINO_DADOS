@@ -1,6 +1,9 @@
 package casino.controlador;
 
 import casino.modelo.Casino;
+//importamos CASINO DAO
+import casino.modelo.CasinoDAO;
+
 import casino.modelo.JuegoDados;
 import casino.modelo.Jugador;
 //import casino.modelo.Reporte; 
@@ -19,6 +22,8 @@ import casino.vista.VentanaReporteFinal;//C4
 
 public class ControladorVentanaJuego {
     private Casino casino;
+    //AGREGAMOS COMO ACCESO PRIVADO
+    private CasinoDAO casinoDAO;
     private VentanaJuego vistaJuego;
     private VentanaPausa vistaPausa;
     private JuegoDados juegoDados;
@@ -35,6 +40,8 @@ public class ControladorVentanaJuego {
     
     public ControladorVentanaJuego(Casino casino, VentanaJuego vistaJuego, VentanaConfiguracion vistaConfig) {
         this.casino = casino;
+        //CASINO DAO INSTANCIA DE CLASE
+        this.casinoDAO = new CasinoDAO();
         this.vistaJuego = vistaJuego;
         this.vistaConfig = vistaConfig; 
         // Creamos la ventana de pausa. El 'true' la hace modal.
@@ -112,17 +119,28 @@ public class ControladorVentanaJuego {
         });
         
         // --- Evento del Menú "Ranking Actual" ---
+        //modificamos para ahora verlo desde la base de datos - MATEO
         vistaJuego.getMenuItemRanking().addActionListener(e -> {
-            StringBuilder rankingMsg = new StringBuilder("--- RANKING ACTUAL ---\n\n");
-            ArrayList<Jugador> jugadoresOrdenados = new ArrayList<>(casino.getJugadores());
-            jugadoresOrdenados.sort(Comparator.comparingInt(Jugador::getDinero).reversed());
-            
-            int pos = 1;
-            for (Jugador j : jugadoresOrdenados) {
-                rankingMsg.append(pos).append(". ").append(j.getNombreConTipo()).append(" - $").append(j.getDinero()).append("\n");
-                pos++;
+            List<String> rankingDesdeBD = casinoDAO.obtenerRankingJugadores();
+            StringBuilder rankingMsg = new StringBuilder("--- RANKING HISTÓRICO (Base de Datos) ---\n\n");
+            if (rankingDesdeBD.isEmpty()) {
+                rankingMsg.append("Aún no hay jugadores guardados en la base de datos.\n");
+                rankingMsg.append("Finaliza una partida para que los jugadores se guarden.");
+            } else {
+                for (String linea : rankingDesdeBD) {
+                    rankingMsg.append(linea).append("\n");
+                }
             }
-            JOptionPane.showMessageDialog(vistaJuego, rankingMsg.toString(), "Ranking Actual", JOptionPane.INFORMATION_MESSAGE);
+            javax.swing.JTextArea textArea = new javax.swing.JTextArea(rankingMsg.toString());
+            textArea.setEditable(false); 
+            javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(textArea);
+            scrollPane.setPreferredSize(new java.awt.Dimension(450, 250)); 
+            JOptionPane.showMessageDialog(
+                vistaJuego, 
+                scrollPane, 
+                "Ranking Histórico", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
         });
         
         // --- Evento del Menú "Historial de Partidas" ---
@@ -315,42 +333,26 @@ public class ControladorVentanaJuego {
         vistaJuego.setVisible(true);
     }
 
-    
-    private void finalizarJuego(String motivo) {
-        JOptionPane.showMessageDialog(vistaJuego, "¡Juego Terminado! Motivo: " + motivo);
-        
-        //CONSIGNA 4
-        mostrarReporteFinal();
-        //FIN
-        
-        // Deshabilitamos los controles del juego
+    //modificacion metodo finalizar juego para mostrar todo en la ventana - mateo
+    private void finalizarJuego(String motivo) {   
         vistaJuego.getBtnAvanzar().setEnabled(false);
         vistaJuego.getMenuItemPausar().setEnabled(false);
         vistaJuego.getMenuItemGuardar().setEnabled(false);
+        vistaJuego.setVisible(false);
         
-        // Generamos y guardamos los reportes finales, como se hacía antes
-        // El total de partidas jugadas puede ser menor si alguien quebró.
-        int partidasJugadas = (partidaActual > totalPartidas) ? totalPartidas : partidaActual -1;
-         if (partidasJugadas < 1) partidasJugadas = 1;
-        //Reporte.generarReporteFinal(casino, partidasJugadas);
-        
-        casino.guardarPartida(this.totalPartidas, this.totalRondas);         
-        System.out.println("Reporte final generado. Cierra esta ventana para volver a configurar.");
-        
-        Object[] options = {"Volver al Menú Principal"};
-        int result = JOptionPane.showOptionDialog(vistaJuego,
-                "¡Juego Terminado! Motivo: " + motivo + "\nEl reporte final ha sido generado en la consola.",
-                "Fin del Juego",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]);
-
-        if (result == 0 || result == JOptionPane.CLOSED_OPTION) {
-             vistaJuego.dispose(); // Cierra la ventana de juego
-             vistaConfig.setVisible(true); // Muestra de nuevo la ventana de configuración
+        for (Jugador jugador : casino.getJugadores()) {
+            // No guardamos al "Casino" en el ranking persistente
+            if (!(jugador instanceof JugadorCasino)) {
+                casinoDAO.guardarOActualizarJugador(jugador);
+            }
         }
+        
+        
+        VentanaReporteFinal reporteDialog = new VentanaReporteFinal(vistaJuego, true);
+        reporteDialog.mostrarReporte(casino, historialDeJuego); 
+
+        vistaJuego.dispose();      
+        vistaConfig.setVisible(true); 
     }
     
     private void pausarJuego() {
@@ -422,3 +424,4 @@ public class ControladorVentanaJuego {
     //    System.out.println("UI actualizada: " + info);
     //}
 }
+
