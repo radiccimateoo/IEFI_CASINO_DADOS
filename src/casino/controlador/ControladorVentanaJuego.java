@@ -294,7 +294,7 @@ public class ControladorVentanaJuego {
         }
     }
      
-     //APLICACION DE CONSIGNA 5  -  SITEMA DE PERTINENCIA - METODO 
+     //APLICACION DE CONSIGNA 5  -  SITEMA DE PERTINENCIA - METODO restaurar 
      public void restaurarJuegoCargado(PartidaGuardadaDTO estadoCargado) {
         this.totalPartidas = estadoCargado.getTotalPartidas();
         this.totalRondas = estadoCargado.getTotalRondas();
